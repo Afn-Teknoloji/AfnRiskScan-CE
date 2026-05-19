@@ -4,8 +4,8 @@
 
 ### Türkçe Siber Risk Tarayıcı  •  Turkish Cyber Risk Scanner
 
-[![Stars](https://img.shields.io/github/stars/Necmettine/AfnRiskScan-CE?style=for-the-badge&color=F5A623)](https://github.com/Necmettine/AfnRiskScan-CE/stargazers)
-[![Downloads](https://img.shields.io/github/downloads/Necmettine/AfnRiskScan-CE/total?style=for-the-badge&color=00C853)](https://github.com/Necmettine/AfnRiskScan-CE/releases)
+[![Stars](https://img.shields.io/github/stars/Afn-Teknoloji/AfnRiskScan-CE?style=for-the-badge&color=F5A623)](https://github.com/Afn-Teknoloji/AfnRiskScan-CE/stargazers)
+[![Downloads](https://img.shields.io/github/downloads/Afn-Teknoloji/AfnRiskScan-CE/total?style=for-the-badge&color=00C853)](https://github.com/Afn-Teknoloji/AfnRiskScan-CE/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
 [![PowerShell](https://img.shields.io/badge/PowerShell-5.1+-5391FE?style=for-the-badge&logo=powershell&logoColor=white)](https://docs.microsoft.com/en-us/powershell/)
 [![Made in Türkiye](https://img.shields.io/badge/Made_in-Türkiye-E30A17?style=for-the-badge)](https://afnteknoloji.com)
@@ -26,7 +26,7 @@ Yöneticiye sunulabilir **HTML/CSV rapor** otomatik üretilir — hem de **tamam
 #### Tek Satırla Çalıştır (Kurulum Yok)
 
 ```powershell
-irm https://raw.githubusercontent.com/Necmettine/AfnRiskScan-CE/main/AfnRiskScan.ps1 | iex
+irm https://raw.githubusercontent.com/Afn-Teknoloji/AfnRiskScan-CE/main/AfnRiskScan.ps1 | iex
 ```
 
 > ⚠️ Tek satır komut yerel ağınızı otomatik tespit edip tarar. Tarama süresi: **~2 dakika**.
@@ -40,7 +40,7 @@ irm https://raw.githubusercontent.com/Necmettine/AfnRiskScan-CE/main/AfnRiskScan
 #### Veya İndirip Çalıştır
 
 ```powershell
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Necmettine/AfnRiskScan-CE/main/AfnRiskScan.ps1" -OutFile AfnRiskScan.ps1
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Afn-Teknoloji/AfnRiskScan-CE/main/AfnRiskScan.ps1" -OutFile AfnRiskScan.ps1
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 .\AfnRiskScan.ps1
 ```
@@ -115,7 +115,7 @@ Auto-generates **executive HTML/CSV reports** — available in **Turkish and Eng
 #### Run with One Line (No Installation)
 
 ```powershell
-irm https://raw.githubusercontent.com/Necmettine/AfnRiskScan-CE/main/AfnRiskScan.ps1 | iex
+irm https://raw.githubusercontent.com/Afn-Teknoloji/AfnRiskScan-CE/main/AfnRiskScan.ps1 | iex
 ```
 
 > ⚠️ Auto-detects your local network and scans it. Typical scan duration: **~2 minutes**.
@@ -129,7 +129,7 @@ irm https://raw.githubusercontent.com/Necmettine/AfnRiskScan-CE/main/AfnRiskScan
 #### Or Download and Run
 
 ```powershell
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Necmettine/AfnRiskScan-CE/main/AfnRiskScan.ps1" -OutFile AfnRiskScan.ps1
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Afn-Teknoloji/AfnRiskScan-CE/main/AfnRiskScan.ps1" -OutFile AfnRiskScan.ps1
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 .\AfnRiskScan.ps1 -Lang en
 ```
@@ -225,8 +225,8 @@ Use this tool **ONLY on networks you are authorized** to scan. Unauthorized scan
 
 Pull requests welcome! See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-- 🐛 [Report a bug](https://github.com/Necmettine/AfnRiskScan-CE/issues/new)
-- 💡 [Request a feature](https://github.com/Necmettine/AfnRiskScan-CE/discussions)
+- 🐛 [Report a bug](https://github.com/Afn-Teknoloji/AfnRiskScan-CE/issues/new)
+- 💡 [Request a feature](https://github.com/Afn-Teknoloji/AfnRiskScan-CE/discussions)
 
 ### Roadmap
 - [ ] IPv6 support
