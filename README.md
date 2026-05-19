@@ -16,6 +16,23 @@
 
 ---
 
+## 📸 Ekran Görüntüleri / Screenshots
+
+<div align="center">
+
+### 🖥️ Konsol Çıktısı / Console Output
+<img src="docs/screenshots/console.png" alt="AFN RiskScan CE Console Output" width="850"/>
+
+### 📊 HTML Rapor — Türkçe
+<img src="docs/screenshots/report.png" alt="HTML Report Turkish" width="850"/>
+
+### 📊 HTML Report — English
+<img src="docs/screenshots/report-en.png" alt="HTML Report English" width="850"/>
+
+</div>
+
+---
+
 ## 🇹🇷 Türkçe
 
 **Bir komutla** ağınızdaki cihazları keşfedin, açık portları bulun, Windows güvenlik açıklarını tespit edin.
