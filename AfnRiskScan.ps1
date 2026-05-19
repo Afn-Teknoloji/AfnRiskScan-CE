@@ -75,13 +75,84 @@ param(
     [string]$OutputPath = ".\AfnRiskScan-Reports",
     [int]$Timeout = 400,
     [int]$Threads = 100,
-    [switch]$NoBanner
+    [switch]$NoBanner,
+    [ValidateSet('tr','en')] [string]$Lang = 'tr'
 )
 
 $ErrorActionPreference = 'SilentlyContinue'
 $script:Findings = New-Object System.Collections.Generic.List[object]
 $script:Hosts    = New-Object System.Collections.Generic.List[object]
 $script:StartTime = Get-Date
+
+# ───────────────────────────────────────────────────────────────────
+#  i18n — DİL DESTEĞİ / LANGUAGE SUPPORT
+# ───────────────────────────────────────────────────────────────────
+$script:I18N = @{
+    'tr' = @{
+        BannerSubtitle = "🛡️  Türkçe Siber Risk Tarayıcı  🛡️"
+        BannerFooter   = "⚡ AFN Teknoloji  |  Yerli & Açık Kaynak  |  MIT Lisansı"
+        AdminWarn      = "  ⚠ Yerel kontroller için Yönetici olarak çalıştırılması önerilir."
+        NoLocalNet     = "  ✗ Yerel ağ tespit edilemedi. Lütfen -Target parametresi verin."
+        AutoDetect     = "  🌐 Otomatik tespit: {0}/24 ağı taranacak"
+        Phase1         = "  🔎 Aşama 1/3 — Ağdaki canlı cihazlar aranıyor..."
+        Phase1Total    = "     Toplam {0} IP taranacak (paralel: {1})"
+        Phase1Done     = "     ✓ {0} canlı cihaz bulundu"
+        Phase2         = "  🔌 Aşama 2/3 — Açık portlar taranıyor..."
+        Phase3         = "  🛡️  Aşama 3/3 — Yerel Windows güvenlik kontrolleri..."
+        Phase3Done     = "     ✓ 8 kontrol noktası tarandı"
+        Config         = "  ⚙  Konfigürasyon:"
+        ConfTargets    = "     • Hedef sayısı  : {0}"
+        ConfPorts      = "     • Port profili  : {0} ({1} port)"
+        ConfLocal      = "     • Yerel kontrol : {0}"
+        ConfLang       = "     • Dil           : Türkçe"
+        Closed         = "kapalı"
+        OpenPorts      = "{0} port açık"
+        Summary        = "📊  TARAMA ÖZETİ"
+        SumCritical    = "     🔴 Kritik   : {0}"
+        SumHigh        = "     🟠 Yüksek   : {0}"
+        SumMedium      = "     🟡 Orta     : {0}"
+        SumDevices     = "     🌐 Cihaz    : {0}"
+        ReportHtml     = "  📄 HTML rapor : {0}"
+        ReportCsv      = "  📄 CSV rapor  : {0}"
+        ProTeaser1     = "  💡  Daha derin denetim ister misiniz?"
+        ProTeaser2     = "      AFN RiskScan Pro — AD, FortiGate, ESXi, Veeam, M365 + AI Türkçe rapor"
+        ProTeaser3     = "      👉  https://afnteknoloji.com/afnriskscan"
+        UnsupportedCIDR= "  ⚠ Sadece /24 ve /23 destekleniyor. Tek IP veya aralık kullanın."
+    }
+    'en' = @{
+        BannerSubtitle = "🛡️  Turkish Cyber Risk Scanner  🛡️"
+        BannerFooter   = "⚡ AFN Teknoloji  |  Open Source  |  MIT License"
+        AdminWarn      = "  ⚠ Running as Administrator is recommended for local checks."
+        NoLocalNet     = "  ✗ Could not detect local network. Please specify -Target."
+        AutoDetect     = "  🌐 Auto-detected: scanning {0}/24"
+        Phase1         = "  🔎 Phase 1/3 — Discovering live hosts on the network..."
+        Phase1Total    = "     {0} IPs to scan (parallel: {1})"
+        Phase1Done     = "     ✓ {0} live host(s) found"
+        Phase2         = "  🔌 Phase 2/3 — Scanning open ports..."
+        Phase3         = "  🛡️  Phase 3/3 — Local Windows security checks..."
+        Phase3Done     = "     ✓ 8 control points scanned"
+        Config         = "  ⚙  Configuration:"
+        ConfTargets    = "     • Targets       : {0}"
+        ConfPorts      = "     • Port profile  : {0} ({1} ports)"
+        ConfLocal      = "     • Local checks  : {0}"
+        ConfLang       = "     • Language      : English"
+        Closed         = "closed"
+        OpenPorts      = "{0} port(s) open"
+        Summary        = "📊  SCAN SUMMARY"
+        SumCritical    = "     🔴 Critical : {0}"
+        SumHigh        = "     🟠 High     : {0}"
+        SumMedium      = "     🟡 Medium   : {0}"
+        SumDevices     = "     🌐 Devices  : {0}"
+        ReportHtml     = "  📄 HTML report : {0}"
+        ReportCsv      = "  📄 CSV report  : {0}"
+        ProTeaser1     = "  💡  Want a deeper audit?"
+        ProTeaser2     = "      AFN RiskScan Pro — AD, FortiGate, ESXi, Veeam, M365 + AI report"
+        ProTeaser3     = "      👉  https://afnteknoloji.com/afnriskscan"
+        UnsupportedCIDR= "  ⚠ Only /24 and /23 are supported. Use single IP or range."
+    }
+}
+$script:T = $I18N[$Lang]
+function L { param([string]$Key, [object[]]$Args) if ($Args) { return $script:T[$Key] -f $Args } else { return $script:T[$Key] } }
 
 # ───────────────────────────────────────────────────────────────────
 #  BANNER
@@ -106,8 +177,10 @@ function Show-Banner {
     ╚═══════════════════════════════════════════════════════════════╝
 
 "@
-    Write-Host $banner -ForegroundColor Yellow
-    Write-Host "    ⚡ AFN Teknoloji  |  Yerli & Açık Kaynak  |  MIT Lisansı" -ForegroundColor DarkGray
+    # Replace subtitle line with localized version
+    $localized = $banner -replace '🛡️  Türkçe Siber Risk Tarayıcı  🛡️', (L 'BannerSubtitle')
+    Write-Host $localized -ForegroundColor Yellow
+    Write-Host "    $(L 'BannerFooter')" -ForegroundColor DarkGray
     Write-Host ""
 }
 
@@ -153,11 +226,11 @@ function Expand-Targets {
             Sort-Object -Property InterfaceMetric | Select-Object -First 1
 
         if (-not $iface) {
-            Write-Host "  ✗ Yerel ağ tespit edilemedi. Lütfen -Target parametresi verin." -ForegroundColor Red
+            Write-Host (L 'NoLocalNet') -ForegroundColor Red
             return @()
         }
         $prefix = $iface.IPAddress -replace '\.\d+$',''
-        Write-Host "  🌐 Otomatik tespit: $prefix.0/24 ağı taranacak" -ForegroundColor Cyan
+        Write-Host ((L 'AutoDetect') -f "$prefix.0") -ForegroundColor Cyan
         return (1..254) | ForEach-Object { "$prefix.$_" }
     }
 
@@ -173,7 +246,7 @@ function Expand-Targets {
                 (1..254) | ForEach-Object { "$($Input.Split('.')[0]).$($Input.Split('.')[1]).$t.$_" }
             }
         }
-        Write-Host "  ⚠ Sadece /24 ve /23 destekleniyor (şimdilik). Tek IP veya aralık kullanın." -ForegroundColor Yellow
+        Write-Host (L 'UnsupportedCIDR') -ForegroundColor Yellow
         return @()
     }
 
@@ -194,8 +267,8 @@ function Invoke-PingSweep {
     param([string[]]$IPs)
 
     Write-Host ""
-    Write-Host "  🔎 Aşama 1/3 — Ağdaki canlı cihazlar aranıyor..." -ForegroundColor Cyan
-    Write-Host "     Toplam $($IPs.Count) IP taranacak (paralel: $Threads)" -ForegroundColor DarkGray
+    Write-Host (L 'Phase1') -ForegroundColor Cyan
+    Write-Host ((L 'Phase1Total') -f $IPs.Count, $Threads) -ForegroundColor DarkGray
 
     $alive = New-Object System.Collections.Concurrent.ConcurrentBag[string]
     $jobs = @()
@@ -214,7 +287,7 @@ function Invoke-PingSweep {
 
     $result = @($alive) | Sort-Object { [version]($_ -replace '\.','. ') -replace ' ','' } -ErrorAction SilentlyContinue
     if (-not $result) { $result = @($alive) | Sort-Object }
-    Write-Host "     ✓ $($result.Count) canlı cihaz bulundu" -ForegroundColor Green
+    Write-Host ((L 'Phase1Done') -f $result.Count) -ForegroundColor Green
     return $result
 }
 
@@ -336,7 +409,7 @@ function Get-Banner {
 # ───────────────────────────────────────────────────────────────────
 function Invoke-LocalSecurityChecks {
     Write-Host ""
-    Write-Host "  🛡️  Aşama 3/3 — Yerel Windows güvenlik kontrolleri..." -ForegroundColor Cyan
+    Write-Host (L 'Phase3') -ForegroundColor Cyan
     $local = $env:COMPUTERNAME
 
     # 1. SMB1
@@ -407,7 +480,7 @@ function Invoke-LocalSecurityChecks {
         }
     } catch {}
 
-    Write-Host "     ✓ 8 kontrol noktası tarandı" -ForegroundColor Green
+    Write-Host (L 'Phase3Done') -ForegroundColor Green
 }
 
 # ───────────────────────────────────────────────────────────────────
@@ -443,12 +516,37 @@ function Export-HtmlReport {
 
     $duration = [math]::Round(((Get-Date) - $script:StartTime).TotalSeconds, 1)
 
+    # i18n for HTML report
+    $isEN = ($Lang -eq 'en')
+    $H_Title       = if ($isEN) { 'AFN RiskScan CE — Report' }              else { 'AFN RiskScan CE — Rapor' }
+    $H_Header      = if ($isEN) { '🛡️ AFN RiskScan CE — Scan Report' }      else { '🛡️ AFN RiskScan CE — Tarama Raporu' }
+    $H_Date        = if ($isEN) { 'Date' }                                  else { 'Tarih' }
+    $H_Duration    = if ($isEN) { 'Duration' }                              else { 'Süre' }
+    $H_Target      = if ($isEN) { 'Targets' }                               else { 'Hedef' }
+    $H_Devices     = if ($isEN) { 'devices' }                               else { 'cihaz' }
+    $H_Sec         = if ($isEN) { 'sec' }                                   else { 'sn' }
+    $H_Findings    = if ($isEN) { '🔍 Findings' }                            else { '🔍 Bulgular' }
+    $H_NoFindings  = if ($isEN) { 'No findings detected. Still, we recommend deep audit with the Pro edition (32+ modules).' } else { 'Bulgu tespit edilmedi. Yine de Pro sürüm ile 32+ modülde derin denetim öneririz.' }
+    $H_Hosts       = if ($isEN) { '🌐 Discovered Devices and Open Ports' }   else { '🌐 Tespit Edilen Cihazlar ve Açık Portlar' }
+    $H_IP          = if ($isEN) { 'IP' }                                    else { 'IP' }
+    $H_OpenPorts   = if ($isEN) { 'Open Ports' }                            else { 'Açık Portlar' }
+    $H_Services    = if ($isEN) { 'Services' }                              else { 'Servisler' }
+    $H_CTATitle    = if ($isEN) { '🚀 This is only a surface scan' }         else { '🚀 Bu sadece yüzeysel tarama' }
+    $H_CTABody     = if ($isEN) { 'Upgrade to AFN RiskScan <strong>Pro</strong> for deep audits across Active Directory, FortiGate, ESXi, Veeam, and Microsoft 365 with 32+ modules. AI-powered executive report, MITRE ATT&amp;CK mapping, industry benchmark, and PowerShell auto-fix scripts.' } else { 'AFN RiskScan <strong>Pro</strong> sürüm ile Active Directory, FortiGate, ESXi, Veeam, Microsoft 365 ortamlarınızda 32+ modülde derin denetim yapın. AI destekli Türkçe yönetici raporu, MITRE ATT&amp;CK eşlemesi, sektör benchmark ve PowerShell auto-fix scripti ile.' }
+    $H_CTAPrimary  = if ($isEN) { 'Request Pro Demo →' }                    else { 'Pro Demo Talep Et →' }
+    $H_CTAContact  = if ($isEN) { 'Contact' }                               else { 'İletişim' }
+    $H_Severity_K  = if ($isEN) { 'Critical' } else { 'Kritik' }
+    $H_Severity_Y  = if ($isEN) { 'High' }     else { 'Yüksek' }
+    $H_Severity_O  = if ($isEN) { 'Medium' }   else { 'Orta' }
+    $H_Severity_D  = if ($isEN) { 'Low' }      else { 'Düşük' }
+    $H_Severity_B  = if ($isEN) { 'Info' }     else { 'Bilgi' }
+
     $html = @"
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="$Lang">
 <head>
 <meta charset="UTF-8">
-<title>AFN RiskScan CE — Rapor</title>
+<title>$H_Title</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; background: #0A0E1A; color: #e5e7eb; line-height: 1.6; }
@@ -486,24 +584,24 @@ td { font-family: 'Consolas', monospace; font-size: 13px; color: #d1d5db; }
 <body>
 <div class="container">
   <div class="header">
-    <h1>🛡️ AFN RiskScan CE — Tarama Raporu</h1>
-    <p>Tarih: $(Get-Date -Format 'dd MMMM yyyy HH:mm') &nbsp;|&nbsp; Süre: $duration sn &nbsp;|&nbsp; Hedef: $($script:Hosts.Count) cihaz</p>
+    <h1>$H_Header</h1>
+    <p>${H_Date}: $(Get-Date -Format 'dd MMMM yyyy HH:mm') &nbsp;|&nbsp; ${H_Duration}: $duration $H_Sec &nbsp;|&nbsp; ${H_Target}: $($script:Hosts.Count) $H_Devices</p>
   </div>
 
   <div class="stats">
-    <div class="stat" style="border-color:#dc2626"><div class="v" style="color:#dc2626">$($sevCount['Kritik'])</div><div class="l">Kritik</div></div>
-    <div class="stat" style="border-color:#ea580c"><div class="v" style="color:#ea580c">$($sevCount['Yüksek'])</div><div class="l">Yüksek</div></div>
-    <div class="stat" style="border-color:#ca8a04"><div class="v" style="color:#ca8a04">$($sevCount['Orta'])</div><div class="l">Orta</div></div>
-    <div class="stat" style="border-color:#0891b2"><div class="v" style="color:#0891b2">$($sevCount['Düşük'])</div><div class="l">Düşük</div></div>
-    <div class="stat" style="border-color:#64748b"><div class="v" style="color:#64748b">$($sevCount['Bilgi'])</div><div class="l">Bilgi</div></div>
+    <div class="stat" style="border-color:#dc2626"><div class="v" style="color:#dc2626">$($sevCount['Kritik'])</div><div class="l">$H_Severity_K</div></div>
+    <div class="stat" style="border-color:#ea580c"><div class="v" style="color:#ea580c">$($sevCount['Yüksek'])</div><div class="l">$H_Severity_Y</div></div>
+    <div class="stat" style="border-color:#ca8a04"><div class="v" style="color:#ca8a04">$($sevCount['Orta'])</div><div class="l">$H_Severity_O</div></div>
+    <div class="stat" style="border-color:#0891b2"><div class="v" style="color:#0891b2">$($sevCount['Düşük'])</div><div class="l">$H_Severity_D</div></div>
+    <div class="stat" style="border-color:#64748b"><div class="v" style="color:#64748b">$($sevCount['Bilgi'])</div><div class="l">$H_Severity_B</div></div>
   </div>
 
   <div class="section">
-    <h2>🔍 Bulgular</h2>
+    <h2>$H_Findings</h2>
 "@
 
     if ($script:Findings.Count -eq 0) {
-        $html += "<p style='color:#9ca3af'>Bulgu tespit edilmedi. Yine de Pro sürüm ile 32+ modülde derin denetim öneririz.</p>"
+        $html += "<p style='color:#9ca3af'>$H_NoFindings</p>"
     } else {
         $sorted = $script:Findings | Sort-Object @{e={
             switch ($_.Severity) { 'Kritik'{0}; 'Yüksek'{1}; 'Orta'{2}; 'Düşük'{3}; 'Bilgi'{4} }
@@ -525,9 +623,9 @@ td { font-family: 'Consolas', monospace; font-size: 13px; color: #d1d5db; }
   </div>
 
   <div class="section">
-    <h2>🌐 Tespit Edilen Cihazlar ve Açık Portlar</h2>
+    <h2>$H_Hosts</h2>
     <table>
-      <thead><tr><th>IP</th><th>Açık Portlar</th><th>Servisler</th></tr></thead>
+      <thead><tr><th>$H_IP</th><th>$H_OpenPorts</th><th>$H_Services</th></tr></thead>
       <tbody>
 "@
     foreach ($h in $byHost) {
@@ -541,12 +639,10 @@ td { font-family: 'Consolas', monospace; font-size: 13px; color: #d1d5db; }
   </div>
 
   <div class="cta">
-    <h2>🚀 Bu sadece yüzeysel tarama</h2>
-    <p>AFN RiskScan <strong>Pro</strong> sürüm ile Active Directory, FortiGate, ESXi, Veeam, Microsoft 365 ortamlarınızda
-    32+ modülde derin denetim yapın. AI destekli Türkçe yönetici raporu, MITRE ATT&amp;CK eşlemesi, sektör benchmark
-    ve PowerShell auto-fix scripti ile.</p>
-    <a class="btn" href="https://afnteknoloji.com/afnriskscan">Pro Demo Talep Et →</a>
-    <a class="btn" style="background:transparent;border:1px solid #F5A623;color:#F5A623" href="https://afnteknoloji.com/iletisim">İletişim</a>
+    <h2>$H_CTATitle</h2>
+    <p>$H_CTABody</p>
+    <a class="btn" href="https://afnteknoloji.com/afnriskscan">$H_CTAPrimary</a>
+    <a class="btn" style="background:transparent;border:1px solid #F5A623;color:#F5A623" href="https://afnteknoloji.com/iletisim">$H_CTAContact</a>
   </div>
 
   <div class="footer">
@@ -571,7 +667,7 @@ Show-Banner
 # Yetki kontrolü (yerel check için)
 $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]'Administrator')
 if ($LocalCheck -and -not $isAdmin) {
-    Write-Host "  ⚠ Yerel kontroller için Yönetici olarak çalıştırılması önerilir." -ForegroundColor Yellow
+    Write-Host (L 'AdminWarn') -ForegroundColor Yellow
 }
 
 # Çıktı klasörü
@@ -590,10 +686,11 @@ if ($PortProfiles.ContainsKey($Ports)) {
 $targets = Expand-Targets -Input $Target
 if ($targets.Count -eq 0) { exit 1 }
 
-Write-Host "  ⚙  Konfigürasyon:" -ForegroundColor White
-Write-Host "     • Hedef sayısı  : $($targets.Count)" -ForegroundColor DarkGray
-Write-Host "     • Port profili  : $Ports ($($portList.Count) port)" -ForegroundColor DarkGray
-Write-Host "     • Yerel kontrol : $($LocalCheck.IsPresent)" -ForegroundColor DarkGray
+Write-Host (L 'Config') -ForegroundColor White
+Write-Host ((L 'ConfTargets') -f $targets.Count) -ForegroundColor DarkGray
+Write-Host ((L 'ConfPorts')   -f $Ports, $portList.Count) -ForegroundColor DarkGray
+Write-Host ((L 'ConfLocal')   -f $LocalCheck.IsPresent) -ForegroundColor DarkGray
+Write-Host (L 'ConfLang') -ForegroundColor DarkGray
 
 # Aşama 1: Ping sweep
 $alive = Invoke-PingSweep -IPs $targets
@@ -601,20 +698,20 @@ $alive = Invoke-PingSweep -IPs $targets
 # Aşama 2: Port tarama
 if ($alive.Count -gt 0) {
     Write-Host ""
-    Write-Host "  🔌 Aşama 2/3 — Açık portlar taranıyor..." -ForegroundColor Cyan
+    Write-Host (L 'Phase2') -ForegroundColor Cyan
     $i = 0
     foreach ($ip in $alive) {
         $i++
         Write-Host "     [$i/$($alive.Count)] $ip" -NoNewline -ForegroundColor White
         $open = Invoke-PortScan -IP $ip -PortList $portList
         if ($open.Count -gt 0) {
-            Write-Host " → $($open.Count) port açık: $($open -join ', ')" -ForegroundColor Green
+            Write-Host " → $((L 'OpenPorts') -f $open.Count): $($open -join ', ')" -ForegroundColor Green
             $script:Hosts.Add([pscustomobject]@{ IP = $ip; Ports = $open })
             foreach ($p in $open) {
                 Test-HighRiskPort -Port $p -IP $ip
             }
         } else {
-            Write-Host " → kapalı" -ForegroundColor DarkGray
+            Write-Host " → $(L 'Closed')" -ForegroundColor DarkGray
         }
     }
 }
@@ -635,24 +732,24 @@ $script:Findings | Export-Csv -Path $csvPath -NoTypeInformation -Encoding UTF8
 # Özet
 Write-Host ""
 Write-Host "  ═══════════════════════════════════════════════════════════════" -ForegroundColor Yellow
-Write-Host "  📊  TARAMA ÖZETİ" -ForegroundColor Yellow
+Write-Host "  $(L 'Summary')" -ForegroundColor Yellow
 Write-Host "  ═══════════════════════════════════════════════════════════════" -ForegroundColor Yellow
 Write-Host ""
 $kritik = ($script:Findings | Where-Object Severity -eq 'Kritik').Count
 $yuksek = ($script:Findings | Where-Object Severity -eq 'Yüksek').Count
 $orta   = ($script:Findings | Where-Object Severity -eq 'Orta').Count
-Write-Host "     🔴 Kritik   : $kritik" -ForegroundColor Red
-Write-Host "     🟠 Yüksek   : $yuksek" -ForegroundColor DarkYellow
-Write-Host "     🟡 Orta     : $orta"   -ForegroundColor Yellow
-Write-Host "     🌐 Cihaz    : $($script:Hosts.Count)" -ForegroundColor Cyan
+Write-Host ((L 'SumCritical') -f $kritik) -ForegroundColor Red
+Write-Host ((L 'SumHigh')     -f $yuksek) -ForegroundColor DarkYellow
+Write-Host ((L 'SumMedium')   -f $orta)   -ForegroundColor Yellow
+Write-Host ((L 'SumDevices')  -f $script:Hosts.Count) -ForegroundColor Cyan
 Write-Host ""
-Write-Host "  📄 HTML rapor : $htmlPath" -ForegroundColor White
-Write-Host "  📄 CSV rapor  : $csvPath"  -ForegroundColor White
+Write-Host ((L 'ReportHtml') -f $htmlPath) -ForegroundColor White
+Write-Host ((L 'ReportCsv')  -f $csvPath)  -ForegroundColor White
 Write-Host ""
 Write-Host "  ─────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
-Write-Host "  💡  Daha derin denetim ister misiniz?" -ForegroundColor Cyan
-Write-Host "      AFN RiskScan Pro — AD, FortiGate, ESXi, Veeam, M365 + AI Türkçe rapor" -ForegroundColor White
-Write-Host "      👉  https://afnteknoloji.com/afnriskscan" -ForegroundColor Yellow
+Write-Host (L 'ProTeaser1') -ForegroundColor Cyan
+Write-Host (L 'ProTeaser2') -ForegroundColor White
+Write-Host (L 'ProTeaser3') -ForegroundColor Yellow
 Write-Host "  ─────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
 Write-Host ""
 

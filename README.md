@@ -1,8 +1,8 @@
-﻿<div align="center">
+<div align="center">
 
 # 🛡️ AFN RiskScan — Community Edition
 
-### Türkçe Siber Risk Tarayıcı  •  Tek PowerShell Dosyası  •  Kurulum Yok
+### Türkçe Siber Risk Tarayıcı  •  Turkish Cyber Risk Scanner
 
 [![Stars](https://img.shields.io/github/stars/Necmettine/AfnRiskScan-CE?style=for-the-badge&color=F5A623)](https://github.com/Necmettine/AfnRiskScan-CE/stargazers)
 [![Downloads](https://img.shields.io/github/downloads/Necmettine/AfnRiskScan-CE/total?style=for-the-badge&color=00C853)](https://github.com/Necmettine/AfnRiskScan-CE/releases)
@@ -10,18 +10,20 @@
 [![PowerShell](https://img.shields.io/badge/PowerShell-5.1+-5391FE?style=for-the-badge&logo=powershell&logoColor=white)](https://docs.microsoft.com/en-us/powershell/)
 [![Made in Türkiye](https://img.shields.io/badge/Made_in-Türkiye-E30A17?style=for-the-badge)](https://afnteknoloji.com)
 
-**Bir komutla** ağınızdaki cihazları keşfedin, açık portları bulun, Windows güvenlik açıklarını tespit edin.
-Yöneticiye sunulabilir **HTML/CSV rapor** otomatik üretilir — hem de **tamamen Türkçe**.
-
-[🚀 Hızlı Başla](#-hızlı-başla) • [⚡ Özellikler](#-özellikler) • [📸 Ekran Görüntüleri](#-ekran-görüntüleri) • [💎 Pro Sürüm](#-afn-riskscan-pro) • [🤝 Katkıda Bulun](#-katkıda-bulun)
+**🇹🇷 Türkçe** &nbsp;•&nbsp; [**🇬🇧 English**](#-english)
 
 </div>
 
 ---
 
-## 🚀 Hızlı Başla
+## 🇹🇷 Türkçe
 
-### Tek Satırla Çalıştır (Kurulum Yok)
+**Bir komutla** ağınızdaki cihazları keşfedin, açık portları bulun, Windows güvenlik açıklarını tespit edin.
+Yöneticiye sunulabilir **HTML/CSV rapor** otomatik üretilir — hem de **tamamen Türkçe**.
+
+### 🚀 Hızlı Başla
+
+#### Tek Satırla Çalıştır (Kurulum Yok)
 
 ```powershell
 irm https://raw.githubusercontent.com/Necmettine/AfnRiskScan-CE/main/AfnRiskScan.ps1 | iex
@@ -29,211 +31,226 @@ irm https://raw.githubusercontent.com/Necmettine/AfnRiskScan-CE/main/AfnRiskScan
 
 > ⚠️ Tek satır komut yerel ağınızı otomatik tespit edip tarar. Tarama süresi: **~2 dakika**.
 
-### Veya İndirip Çalıştır
+#### İngilizce Çıktı İçin
 
 ```powershell
-# 1. İndir
+.\AfnRiskScan.ps1 -Lang en
+```
+
+#### Veya İndirip Çalıştır
+
+```powershell
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Necmettine/AfnRiskScan-CE/main/AfnRiskScan.ps1" -OutFile AfnRiskScan.ps1
-
-# 2. Execution policy (gerekirse)
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-
-# 3. Çalıştır
 .\AfnRiskScan.ps1
 ```
 
----
-
-## ⚡ Özellikler
+### ⚡ Özellikler
 
 | Yetenek | CE (Bedava) | [Pro](https://afnteknoloji.com/afnriskscan) |
 |---|:---:|:---:|
-| 🌐 Ağ keşfi (Ping sweep + ARP) | ✅ | ✅ |
+| 🌐 Ağ keşfi (Ping sweep) | ✅ | ✅ |
 | 🔌 Çoklu host port taraması (Top 100/1000/Custom) | ✅ | ✅ |
 | 🔍 Servis fingerprint + banner grab | ✅ | ✅ |
 | 🛡️ Windows yerel güvenlik kontrolleri (8 madde) | ✅ | ✅ |
-| 📄 HTML + CSV rapor (Türkçe) | ✅ | ✅ |
-| 🏢 Active Directory derin denetim (Kerberoasting, DCSync, KRBTGT, Ghost) | ❌ | ✅ |
+| 📄 HTML + CSV rapor (Türkçe/İngilizce) | ✅ | ✅ |
+| 🏢 Active Directory derin denetim (Kerberoasting, DCSync, KRBTGT) | ❌ | ✅ |
 | 🔥 FortiGate / Sophos API denetim | ❌ | ✅ |
 | ☁️ ESXi / vCenter / Veeam audit | ❌ | ✅ |
 | 📧 Microsoft 365 (Graph API) — MFA, CA, Secure Score | ❌ | ✅ |
 | 🤖 AI destekli Türkçe yönetici raporu (GPT-4 / Claude / Gemini) | ❌ | ✅ |
-| 🎯 MITRE ATT&CK — Tehdit aktör eşlemesi (Conti, LockBit, BlackCat...) | ❌ | ✅ |
+| 🎯 MITRE ATT&CK — Tehdit aktör eşlemesi | ❌ | ✅ |
 | 📊 Sektör benchmark karşılaştırması | ❌ | ✅ |
 | ⚖️ KVKK / ISO 27001 / NIST CSF / CIS Controls eşleme | ❌ | ✅ |
 | 🔧 PowerShell auto-fix script üretimi | ❌ | ✅ |
-| 📑 Yönetici PDF + sözleşme şablonları | ❌ | ✅ |
 
-### 🛡️ CE'nin Kontrol Ettiği Windows Riskleri
+### 🛡️ Kontrol Edilen Windows Riskleri
 
-- ✔️ **SMB1 protokolü aktif** (EternalBlue / WannaCry / NotPetya vektörü)
-- ✔️ **Print Spooler — PrintNightmare** (CVE-2021-34527, DC takeover)
-- ✔️ **WDigest cleartext credential** (Mimikatz LSASS dump riski)
-- ✔️ **LM Hash storage** (Rainbow table ile saniyede kırılır)
+- ✔️ **SMB1 protokolü** (EternalBlue / WannaCry / NotPetya)
+- ✔️ **Print Spooler — PrintNightmare** (CVE-2021-34527)
+- ✔️ **WDigest cleartext credential** (Mimikatz LSASS dump)
+- ✔️ **LM Hash storage** (Rainbow table)
 - ✔️ **Yerel Guest hesabı**
-- ✔️ **TLS 1.0 / 1.1** etkinliği
-- ✔️ **LLMNR / NBT-NS** (Responder credential capture)
-- ✔️ **RDP NLA** durumu (BlueKeep koruması)
+- ✔️ **TLS 1.0 / 1.1**
+- ✔️ **LLMNR / NBT-NS** (Responder capture)
+- ✔️ **RDP NLA** (BlueKeep koruması)
 
-### 🔥 Yüksek Riskli Açık Port Tespiti
-
-Bulunan açık portlar otomatik olarak risk değerlendirmesinden geçer:
-
-| Port | Servis | Risk |
-|---|---|:---:|
-| 23 | Telnet | 🔴 Kritik |
-| 2375 | Docker API | 🔴 Kritik |
-| 6379 | Redis | 🔴 Kritik |
-| 9200 | Elasticsearch | 🔴 Kritik |
-| 27017 | MongoDB | 🔴 Kritik |
-| 3389 | RDP | 🟠 Yüksek |
-| 1433 | MSSQL | 🟠 Yüksek |
-| 21 | FTP | 🟠 Yüksek |
-| 445 | SMB (ext) | 🟡 Orta |
-| ... | +15 servis | |
-
----
-
-## 📸 Ekran Görüntüleri
-
-<div align="center">
-
-### Renkli Konsol Çıktısı
-<img src="docs/screenshots/console.png" alt="Console Output" width="800"/>
-
-### HTML Rapor — Dark Theme
-<img src="docs/screenshots/report.png" alt="HTML Report" width="800"/>
-
-</div>
-
----
-
-## 📖 Kullanım Örnekleri
+### 📖 Kullanım Örnekleri
 
 ```powershell
-# 1. Yerel ağı otomatik tara (varsayılan)
-.\AfnRiskScan.ps1
-
-# 2. Belirli bir /24 ağı + Top 1000 port
+.\AfnRiskScan.ps1                                      # Yerel ağı otomatik tara
 .\AfnRiskScan.ps1 -Target 192.168.1.0/24 -Ports Top1000
-
-# 3. IP aralığı + yerel Windows kontrolleri
 .\AfnRiskScan.ps1 -Target 10.10.10.1-50 -LocalCheck
-
-# 4. Tek host + özel port listesi
-.\AfnRiskScan.ps1 -Target server01 -Ports 22,80,443,3389,5985
-
-# 5. Tam port taraması (yavaş)
-.\AfnRiskScan.ps1 -Target 192.168.1.10 -Ports All
-
-# 6. Özel çıktı klasörü
-.\AfnRiskScan.ps1 -OutputPath C:\Raporlar\Musteri-X
+.\AfnRiskScan.ps1 -Target server01 -Ports 22,80,443,3389
+.\AfnRiskScan.ps1 -Lang en                             # English output
 ```
 
-### Parametreler
+### 💎 AFN RiskScan Pro
 
-| Parametre | Açıklama | Varsayılan |
-|---|---|---|
-| `-Target` | IP, CIDR, aralık veya hostname | Otomatik tespit |
-| `-Ports` | `Top100`, `Top1000`, `All` veya `80,443,3389` | `Top100` |
-| `-LocalCheck` | Yerel Windows kontrollerini de çalıştır | `false` |
-| `-OutputPath` | Rapor çıktı klasörü | `.\AfnRiskScan-Reports` |
-| `-Timeout` | Port bağlantı timeout (ms) | `400` |
-| `-Threads` | Paralel ping/port sayısı | `100` |
+CE — yüzeysel risk haritası verir.
+**Pro** — penetrasyon testi seviyesinde derin denetim yapar:
 
----
-
-## 💎 AFN RiskScan Pro
-
-CE — saatler içinde **yüzeysel** risk haritası verir.
-**Pro** — günler süren gerçek bir penetrasyon testi seviyesinde derin denetim yapar.
-
-<div align="center">
-
-### Pro sürümde sizi bekleyenler
-
-🏢 **Active Directory Derin Denetim**
-Kerberoasting, AS-REP roastable, DCSync, KRBTGT yaşı, Unconstrained Delegation, Ghost devices, Stale admins
-
-🤖 **AI Destekli Türkçe Yönetici Raporu**
-GPT-4 / Claude / Gemini ile yöneticinize sunulacak hale getirilmiş Türkçe analiz, eylem planı, 30/60/90 gün roadmap
-
-🎯 **MITRE ATT&CK + Tehdit Aktör Eşlemesi**
-"Ortamınız %78 LockBit 3.0 saldırı kalıbına uyuyor" — Conti, LockBit, BlackCat, FIN7, Volt Typhoon, Lazarus, EsxiArgs, DeadBolt
-
-📊 **Sektör Benchmark Karşılaştırması**
-"Finans sektörü ortalamasından %42 daha riskli durumdasınız" — Türkiye KOBİ'leri için 15+ sektör profili
-
-⚖️ **KVKK / ISO 27001 / NIST CSF / CIS Controls**
-Her bulgu için uyumluluk kontrol maddesi eşlemesi — denetim hazırlığı için kanıt seti
-
-🔧 **PowerShell Auto-Fix Script**
-PrintNightmare, SMB1, WDigest, LM Hash, TLS 1.0, Office Macro, KRBTGT rotate — 12+ bulgu için hazır .ps1
+🏢 **Active Directory** — Kerberoasting, DCSync, KRBTGT, Ghost devices
+🤖 **AI Türkçe Yönetici Raporu** — GPT-4 / Claude / Gemini
+🎯 **MITRE ATT&CK Tehdit Aktör Eşlemesi** — Conti, LockBit, BlackCat, FIN7...
+📊 **Sektör Benchmark** — Türkiye KOBİ'leri için 15+ sektör profili
+⚖️ **KVKK / ISO 27001 / NIST CSF / CIS Controls** uyumluluk eşlemesi
+🔧 **PowerShell Auto-Fix** — 12+ bulgu için hazır .ps1
 
 [**🚀 Pro Demo Talep Et — afnteknoloji.com/afnriskscan**](https://afnteknoloji.com/afnriskscan)
 
-</div>
+### ⚠️ Etik Kullanım
+
+Bu aracı **SADECE yetkili olduğunuz ağlarda** kullanın. Yetkisiz tarama TCK 243. madde kapsamında suç teşkil eder.
 
 ---
 
-## 🔐 Güvenlik & Etik Kullanım
+## 🇬🇧 English
 
-> **⚠️ UYARI**
-> Bu aracı **SADECE yetkili olduğunuz ağlarda** kullanın.
-> Yetkisiz ağ taraması Türkiye'de 5237 sayılı TCK 243. madde (bilişim sistemine girme) kapsamında **suç teşkil eder.**
+**One command** to discover devices on your network, find open ports, and detect Windows security vulnerabilities.
+Auto-generates **executive HTML/CSV reports** — available in **Turkish and English**.
 
-CE script tamamen **offline** çalışır. Hiçbir veriniz internete gönderilmez.
-Kod **MIT lisansı** altında açıktır — istediğiniz gibi inceleyin, değiştirin, paylaşın.
+### 🚀 Quick Start
+
+#### Run with One Line (No Installation)
+
+```powershell
+irm https://raw.githubusercontent.com/Necmettine/AfnRiskScan-CE/main/AfnRiskScan.ps1 | iex
+```
+
+> ⚠️ Auto-detects your local network and scans it. Typical scan duration: **~2 minutes**.
+
+#### English Output
+
+```powershell
+.\AfnRiskScan.ps1 -Lang en
+```
+
+#### Or Download and Run
+
+```powershell
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Necmettine/AfnRiskScan-CE/main/AfnRiskScan.ps1" -OutFile AfnRiskScan.ps1
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\AfnRiskScan.ps1 -Lang en
+```
+
+### ⚡ Features
+
+| Capability | CE (Free) | [Pro](https://afnteknoloji.com/afnriskscan) |
+|---|:---:|:---:|
+| 🌐 Network discovery (Ping sweep) | ✅ | ✅ |
+| 🔌 Multi-host port scanning (Top 100/1000/Custom) | ✅ | ✅ |
+| 🔍 Service fingerprinting + banner grabbing | ✅ | ✅ |
+| 🛡️ Windows local security checks (8 items) | ✅ | ✅ |
+| 📄 HTML + CSV report (Turkish/English) | ✅ | ✅ |
+| 🏢 Active Directory deep audit (Kerberoasting, DCSync, KRBTGT) | ❌ | ✅ |
+| 🔥 FortiGate / Sophos API audit | ❌ | ✅ |
+| ☁️ ESXi / vCenter / Veeam audit | ❌ | ✅ |
+| 📧 Microsoft 365 (Graph API) — MFA, CA, Secure Score | ❌ | ✅ |
+| 🤖 AI-powered executive report (GPT-4 / Claude / Gemini) | ❌ | ✅ |
+| 🎯 MITRE ATT&CK — Threat actor attribution | ❌ | ✅ |
+| 📊 Industry benchmark comparison | ❌ | ✅ |
+| ⚖️ GDPR / ISO 27001 / NIST CSF / CIS Controls mapping | ❌ | ✅ |
+| 🔧 PowerShell auto-fix script generation | ❌ | ✅ |
+
+### 🛡️ Windows Risks Detected
+
+- ✔️ **SMB1 protocol** (EternalBlue / WannaCry / NotPetya vector)
+- ✔️ **Print Spooler — PrintNightmare** (CVE-2021-34527, DC takeover)
+- ✔️ **WDigest cleartext credential** (Mimikatz LSASS dump risk)
+- ✔️ **LM Hash storage** (Rainbow table)
+- ✔️ **Local Guest account**
+- ✔️ **TLS 1.0 / 1.1** enabled
+- ✔️ **LLMNR / NBT-NS** (Responder credential capture)
+- ✔️ **RDP NLA** status (BlueKeep protection)
+
+### 🔥 High-Risk Open Port Detection
+
+Discovered open ports automatically go through risk assessment:
+
+| Port | Service | Risk |
+|---|---|:---:|
+| 23 | Telnet | 🔴 Critical |
+| 2375 | Docker API | 🔴 Critical |
+| 6379 | Redis | 🔴 Critical |
+| 9200 | Elasticsearch | 🔴 Critical |
+| 27017 | MongoDB | 🔴 Critical |
+| 3389 | RDP | 🟠 High |
+| 1433 | MSSQL | 🟠 High |
+| 21 | FTP | 🟠 High |
+
+### 📖 Usage Examples
+
+```powershell
+.\AfnRiskScan.ps1                                      # Auto-scan local network
+.\AfnRiskScan.ps1 -Target 192.168.1.0/24 -Ports Top1000
+.\AfnRiskScan.ps1 -Target 10.10.10.1-50 -LocalCheck
+.\AfnRiskScan.ps1 -Target server01 -Ports 22,80,443,3389
+.\AfnRiskScan.ps1 -Lang tr                             # Türkçe çıktı
+```
+
+### Parameters
+
+| Parameter | Description | Default |
+|---|---|---|
+| `-Target` | IP, CIDR, range, or hostname | Auto-detect |
+| `-Ports` | `Top100`, `Top1000`, `All`, or `80,443,3389` | `Top100` |
+| `-LocalCheck` | Run local Windows security checks | `false` |
+| `-Lang` | Output language: `tr` or `en` | `tr` |
+| `-OutputPath` | Report output folder | `.\AfnRiskScan-Reports` |
+| `-Timeout` | Port connection timeout (ms) | `400` |
+| `-Threads` | Parallel ping/port count | `100` |
+
+### 💎 AFN RiskScan Pro
+
+CE gives a **surface-level** risk map.
+**Pro** delivers penetration-test-level deep audit:
+
+🏢 **Active Directory** — Kerberoasting, DCSync, KRBTGT, Ghost devices
+🤖 **AI Executive Report** — GPT-4 / Claude / Gemini
+🎯 **MITRE ATT&CK Threat Actor Mapping** — Conti, LockBit, BlackCat, FIN7...
+📊 **Industry Benchmark** — 15+ industry profiles
+⚖️ **GDPR / ISO 27001 / NIST CSF / CIS Controls** compliance mapping
+🔧 **PowerShell Auto-Fix** — Ready scripts for 12+ findings
+
+[**🚀 Request Pro Demo — afnteknoloji.com/afnriskscan**](https://afnteknoloji.com/afnriskscan)
+
+### ⚠️ Ethical Use
+
+Use this tool **ONLY on networks you are authorized** to scan. Unauthorized scanning is a criminal offense under Turkish Criminal Code Article 243 and similar laws worldwide.
 
 ---
 
-## 🤝 Katkıda Bulun
+## 🤝 Contributing
 
-Pull request açın, issue raporlayın, ⭐ verin!
+Pull requests welcome! See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-- 🐛 **Bug Report** — [Issue aç](https://github.com/Necmettine/AfnRiskScan-CE/issues/new)
-- 💡 **Özellik Önerisi** — [Discussion başlat](https://github.com/Necmettine/AfnRiskScan-CE/discussions)
-- 📝 **Dokümantasyon iyileştirmesi** — PR gönderin
+- 🐛 [Report a bug](https://github.com/Necmettine/AfnRiskScan-CE/issues/new)
+- 💡 [Request a feature](https://github.com/Necmettine/AfnRiskScan-CE/discussions)
 
-### Geliştirme Yol Haritası
-
-- [ ] IPv6 desteği
-- [ ] Nmap XML çıktısı export
-- [ ] Linux / macOS PowerShell Core uyumluluğu
-- [ ] Zafiyet tarama eklentisi (Nuclei template'leri)
-- [ ] Slack / Teams webhook entegrasyonu
+### Roadmap
+- [ ] IPv6 support
+- [ ] Nmap XML export
+- [ ] Linux / macOS PowerShell Core compatibility
+- [ ] Nuclei templates plugin
+- [ ] Slack / Teams webhook integration
 
 ---
 
-## ❓ S.S.S.
+## 👥 About AFN Teknoloji
 
-**Nessus / OpenVAS varken neden bunu kullanayım?**
-Nessus pahalı, OpenVAS karmaşık. CE — **2 dakikada Türkçe rapor** üretir. Pro sürüm ise Türkiye KOBİ'lerine özel KVKK/sektör eşlemesi ile **lokal pazarda eşsizdir**.
+**AFN Teknoloji Bilişim Destek ve Danışmanlık** is a Turkish IT consulting firm providing **cybersecurity, system administration, backup, and disaster recovery** solutions to SMBs and enterprises.
 
-**Antivirus uyarı veriyor?**
-Bazı AV ürünleri PowerShell tabanlı tarayıcıları "potansiyel zararlı" olarak işaretler. Kod açık — incelemenizi öneririz. İmza istiyorsanız Pro sürümde dijital imzalı binary mevcut.
+🤝 **Partnerships:** Fortinet • Veeam Silver Partner • VMware • Microsoft • Sophos • Dell • HPE • Aruba
 
-**Hangi PowerShell sürümünde çalışır?**
-Windows PowerShell **5.1+** ve PowerShell Core **7+**. Paralel işlemler için PS 7+ önerilir.
-
-**Yönetici hakkı gerekli mi?**
-Sadece **`-LocalCheck`** parametresi için. Ağ tarama normal kullanıcıyla çalışır.
-
----
-
-## 👥 AFN Teknoloji Hakkında
-
-**AFN Teknoloji Bilişim Destek ve Danışmanlık**, Türkiye'de KOBİ ve kurumsal firmalara **siber güvenlik, sistem yönetimi, yedekleme ve felaket kurtarma** çözümleri sunan bir BT danışmanlık firmasıdır.
-
-🤝 İş Ortaklıklarımız: **Fortinet • Veeam Silver Partner • VMware • Microsoft • Sophos • Dell • HPE • Aruba**
-
-🌐 [afnteknoloji.com](https://afnteknoloji.com) — 📧 [info@afnteknoloji.com](mailto:info@afnteknoloji.com) — 📞 İletişim: [afnteknoloji.com/iletisim](https://afnteknoloji.com/iletisim)
+🌐 [afnteknoloji.com](https://afnteknoloji.com) — 📧 [info@afnteknoloji.com](mailto:info@afnteknoloji.com)
 
 ---
 
 <div align="center">
 
-**Bu araç işine yaradıysa ⭐ vermeyi unutma!**
+**If this tool helped you, please ⭐ star the repo!**
+**Bu araç işine yaradıysa lütfen ⭐ ver!**
 
 Made with ❤️ in Türkiye by [AFN Teknoloji](https://afnteknoloji.com)
 
