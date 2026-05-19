@@ -21,3 +21,8 @@ desktop.ini
 # Test
 test-output/
 sandbox/
+demo-report.ps1
+LINKEDIN-POST.md
+docs/screenshots/*.html
+docs/screenshots/demo-report-*.html
+docs/screenshots/terminal-tr.html
