@@ -1,11 +1,11 @@
-<div align="center">
+﻿<div align="center">
 
 # 🛡️ AFN RiskScan — Community Edition
 
 ### Türkçe Siber Risk Tarayıcı  •  Tek PowerShell Dosyası  •  Kurulum Yok
 
-[![Stars](https://img.shields.io/github/stars/afnteknoloji/AfnRiskScan-CE?style=for-the-badge&color=F5A623)](https://github.com/afnteknoloji/AfnRiskScan-CE/stargazers)
-[![Downloads](https://img.shields.io/github/downloads/afnteknoloji/AfnRiskScan-CE/total?style=for-the-badge&color=00C853)](https://github.com/afnteknoloji/AfnRiskScan-CE/releases)
+[![Stars](https://img.shields.io/github/stars/Necmettine/AfnRiskScan-CE?style=for-the-badge&color=F5A623)](https://github.com/Necmettine/AfnRiskScan-CE/stargazers)
+[![Downloads](https://img.shields.io/github/downloads/Necmettine/AfnRiskScan-CE/total?style=for-the-badge&color=00C853)](https://github.com/Necmettine/AfnRiskScan-CE/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
 [![PowerShell](https://img.shields.io/badge/PowerShell-5.1+-5391FE?style=for-the-badge&logo=powershell&logoColor=white)](https://docs.microsoft.com/en-us/powershell/)
 [![Made in Türkiye](https://img.shields.io/badge/Made_in-Türkiye-E30A17?style=for-the-badge)](https://afnteknoloji.com)
@@ -24,7 +24,7 @@ Yöneticiye sunulabilir **HTML/CSV rapor** otomatik üretilir — hem de **tamam
 ### Tek Satırla Çalıştır (Kurulum Yok)
 
 ```powershell
-irm https://raw.githubusercontent.com/afnteknoloji/AfnRiskScan-CE/main/AfnRiskScan.ps1 | iex
+irm https://raw.githubusercontent.com/Necmettine/AfnRiskScan-CE/main/AfnRiskScan.ps1 | iex
 ```
 
 > ⚠️ Tek satır komut yerel ağınızı otomatik tespit edip tarar. Tarama süresi: **~2 dakika**.
@@ -33,7 +33,7 @@ irm https://raw.githubusercontent.com/afnteknoloji/AfnRiskScan-CE/main/AfnRiskSc
 
 ```powershell
 # 1. İndir
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/afnteknoloji/AfnRiskScan-CE/main/AfnRiskScan.ps1" -OutFile AfnRiskScan.ps1
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Necmettine/AfnRiskScan-CE/main/AfnRiskScan.ps1" -OutFile AfnRiskScan.ps1
 
 # 2. Execution policy (gerekirse)
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
@@ -191,8 +191,8 @@ Kod **MIT lisansı** altında açıktır — istediğiniz gibi inceleyin, deği�
 
 Pull request açın, issue raporlayın, ⭐ verin!
 
-- 🐛 **Bug Report** — [Issue aç](https://github.com/afnteknoloji/AfnRiskScan-CE/issues/new)
-- 💡 **Özellik Önerisi** — [Discussion başlat](https://github.com/afnteknoloji/AfnRiskScan-CE/discussions)
+- 🐛 **Bug Report** — [Issue aç](https://github.com/Necmettine/AfnRiskScan-CE/issues/new)
+- 💡 **Özellik Önerisi** — [Discussion başlat](https://github.com/Necmettine/AfnRiskScan-CE/discussions)
 - 📝 **Dokümantasyon iyileştirmesi** — PR gönderin
 
 ### Geliştirme Yol Haritası
