@@ -1,0 +1,23 @@
+# Reports
+AfnRiskScan-Reports/
+*.html
+*.csv
+!docs/**/*.html
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Test
+test-output/
+sandbox/
