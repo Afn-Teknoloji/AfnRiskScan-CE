@@ -1,4 +1,4 @@
-# Katkıda Bulunma Rehberi
+﻿# Katkıda Bulunma Rehberi
 
 AFN RiskScan CE'ye katkıda bulunmak istediğiniz için teşekkürler! 🎉
 
@@ -6,7 +6,7 @@ AFN RiskScan CE'ye katkıda bulunmak istediğiniz için teşekkürler! 🎉
 
 ### 🐛 Bug Raporlamak
 
-[Issues](https://github.com/afnteknoloji/AfnRiskScan-CE/issues/new) sayfasından açın. Lütfen şunları belirtin:
+[Issues](https://github.com/Afn-Teknoloji/AfnRiskScan-CE/issues/new) sayfasından açın. Lütfen şunları belirtin:
 
 - PowerShell sürümü (`$PSVersionTable`)
 - Windows sürümü
@@ -16,7 +16,7 @@ AFN RiskScan CE'ye katkıda bulunmak istediğiniz için teşekkürler! 🎉
 
 ### 💡 Yeni Özellik Önermek
 
-[Discussions](https://github.com/afnteknoloji/AfnRiskScan-CE/discussions) açın. Özelliğin:
+[Discussions](https://github.com/Afn-Teknoloji/AfnRiskScan-CE/discussions) açın. Özelliğin:
 - Hangi sorunu çözeceğini
 - Hedef kullanıcı kitlesini
 - Pro sürümle çakışmayan bir özellik olduğunu (örn. AI, AD modülü Pro'ya aittir)

@@ -54,7 +54,7 @@
     Tüm /24 ağı + 1000 port + yerel Windows kontrolleri
 
 .EXAMPLE
-    irm https://raw.githubusercontent.com/Necmettine/AfnRiskScan-CE/main/AfnRiskScan.ps1 | iex
+    irm https://raw.githubusercontent.com/Afn-Teknoloji/AfnRiskScan-CE/main/AfnRiskScan.ps1 | iex
     Tek satır kurulumsuz çalıştırma
 
 .NOTES
@@ -648,7 +648,7 @@ td { font-family: 'Consolas', monospace; font-size: 13px; color: #d1d5db; }
   <div class="footer">
     AFN RiskScan Community Edition v1.0 &nbsp;|&nbsp; Geliştirici:
     <a href="https://afnteknoloji.com">AFN Teknoloji Bilişim Destek ve Danışmanlık</a><br>
-    MIT Lisansı &nbsp;|&nbsp; <a href="https://github.com/Necmettine/AfnRiskScan-CE">GitHub</a>
+    MIT Lisansı &nbsp;|&nbsp; <a href="https://github.com/Afn-Teknoloji/AfnRiskScan-CE">GitHub</a>
   </div>
 </div>
 </body>

@@ -1,4 +1,4 @@
-# Güvenlik Politikası / Security Policy
+﻿# Güvenlik Politikası / Security Policy
 
 ## Güvenlik Açığı Bildirme
 
