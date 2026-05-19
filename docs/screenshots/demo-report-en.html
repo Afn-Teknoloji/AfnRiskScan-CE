@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AFN RiskScan CE — Report</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; background: #0A0E1A; color: #e5e7eb; line-height: 1.6; }
+.container { max-width: 1200px; margin: 0 auto; padding: 40px 24px; }
+.header { background: linear-gradient(135deg, rgba(245,166,35,0.1), rgba(0,125,184,0.1));
+          border: 1px solid rgba(245,166,35,0.2); border-radius: 16px; padding: 32px; margin-bottom: 32px; }
+.header h1 { color: #F5A623; font-size: 32px; margin-bottom: 8px; }
+.header p { color: #9ca3af; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 32px; }
+.stat { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; text-align: center; }
+.stat .v { font-size: 36px; font-weight: 900; }
+.stat .l { font-size: 12px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
+.section { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+.section h2 { color: #F5A623; font-size: 20px; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px; }
+.finding { padding: 14px; border-left: 4px solid; margin-bottom: 12px; background: rgba(255,255,255,0.03); border-radius: 6px; }
+.finding .t { font-weight: 700; color: #fff; }
+.finding .h { font-size: 12px; color: #9ca3af; margin-top: 4px; font-family: 'Consolas', monospace; }
+.finding .d { font-size: 14px; color: #d1d5db; margin-top: 8px; }
+.sev { display: inline-block; padding: 3px 10px; border-radius: 4px; font-size: 11px; font-weight: 700; color: #fff; text-transform: uppercase; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.06); }
+th { color: #F5A623; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+td { font-family: 'Consolas', monospace; font-size: 13px; color: #d1d5db; }
+.cta { background: linear-gradient(135deg, rgba(245,166,35,0.15), rgba(0,125,184,0.15));
+       border: 1px solid rgba(245,166,35,0.3); border-radius: 16px; padding: 32px; text-align: center; margin-top: 32px; }
+.cta h2 { color: #F5A623; font-size: 24px; margin-bottom: 12px; }
+.cta p { color: #d1d5db; margin-bottom: 20px; }
+.btn { display: inline-block; background: #F5A623; color: #000; padding: 12px 28px; border-radius: 8px;
+       font-weight: 700; text-decoration: none; margin: 4px; }
+.footer { text-align: center; color: #6b7280; font-size: 12px; padding: 24px; }
+.footer a { color: #F5A623; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>🛡️ AFN RiskScan CE — Scan Report</h1>
+    <p>Date: 19 Mayıs 2026 21:49 &nbsp;|&nbsp; Duration: 87.3 sec &nbsp;|&nbsp; Targets: 7 devices</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat" style="border-color:#dc2626"><div class="v" style="color:#dc2626">4</div><div class="l">Critical</div></div>
+    <div class="stat" style="border-color:#ea580c"><div class="v" style="color:#ea580c">6</div><div class="l">High</div></div>
+    <div class="stat" style="border-color:#ca8a04"><div class="v" style="color:#ca8a04">2</div><div class="l">Medium</div></div>
+    <div class="stat" style="border-color:#0891b2"><div class="v" style="color:#0891b2">0</div><div class="l">Low</div></div>
+    <div class="stat" style="border-color:#64748b"><div class="v" style="color:#64748b">4</div><div class="l">Info</div></div>
+  </div>
+
+  <div class="section">
+    <h2>🔍 Findings</h2>
+    <div class="finding" style="border-color:#dc2626">
+      <span class="sev" style="background:#dc2626">Critical</span>
+      <span class="t">SMB1 protokol&#252; aktif</span>
+      <div class="h">📍 DC01.musteri.local</div>
+      <div class="d">SMB1 — EternalBlue/WannaCry/NotPetya saldırılarının vekt&#246;r&#252;. Devre dışı bırakın.</div>
+    </div>
+    <div class="finding" style="border-color:#dc2626">
+      <span class="sev" style="background:#dc2626">Critical</span>
+      <span class="t">Print Spooler DC &#252;zerinde aktif (PrintNightmare CVE-2021-34527)</span>
+      <div class="h">📍 DC01.musteri.local</div>
+      <div class="d">Domain Controller &#252;zerinde Print Spooler servisi a&#231;ık — anlık domain takeover riski.</div>
+    </div>
+    <div class="finding" style="border-color:#dc2626">
+      <span class="sev" style="background:#dc2626">Critical</span>
+      <span class="t">Redis servisi a&#231;ık (Port 6379)</span>
+      <div class="h">📍 192.168.1.10</div>
+      <div class="d">Redis varsayılan auth yok — RCE riski y&#252;ksek.</div>
+    </div>
+    <div class="finding" style="border-color:#dc2626">
+      <span class="sev" style="background:#dc2626">Critical</span>
+      <span class="t">MongoDB servisi a&#231;ık (Port 27017)</span>
+      <div class="h">📍 192.168.1.45</div>
+      <div class="d">MongoDB auth yoksa t&#252;m veri a&#231;ık.</div>
+    </div>
+    <div class="finding" style="border-color:#ea580c">
+      <span class="sev" style="background:#ea580c">High</span>
+      <span class="t">RDP servisi a&#231;ık (Port 3389)</span>
+      <div class="h">📍 192.168.1.10</div>
+      <div class="d">RDP brute force / BlueKeep CVE-2019-0708 riski. NLA zorunlu.</div>
+    </div>
+    <div class="finding" style="border-color:#ea580c">
+      <span class="sev" style="background:#ea580c">High</span>
+      <span class="t">WDigest cleartext credential saklamayı aktif</span>
+      <div class="h">📍 DC01.musteri.local</div>
+      <div class="d">Mimikatz LSASS dump ile cleartext parolalar &#231;ıkarılabilir.</div>
+    </div>
+    <div class="finding" style="border-color:#ea580c">
+      <span class="sev" style="background:#ea580c">High</span>
+      <span class="t">LM Hash storage devre dışı bırakılmamış</span>
+      <div class="h">📍 DC01.musteri.local</div>
+      <div class="d">LM hash rainbow table ile saniyeler i&#231;inde crack edilir.</div>
+    </div>
+    <div class="finding" style="border-color:#ea580c">
+      <span class="sev" style="background:#ea580c">High</span>
+      <span class="t">LLMNR aktif (Responder ile credential capture riski)</span>
+      <div class="h">📍 DC01.musteri.local</div>
+      <div class="d">LLMNR kapatılmalı (GPO ile EnableMulticast=0).</div>
+    </div>
+    <div class="finding" style="border-color:#ea580c">
+      <span class="sev" style="background:#ea580c">High</span>
+      <span class="t">Telnet servisi a&#231;ık (Port 23)</span>
+      <div class="h">📍 192.168.1.22</div>
+      <div class="d">Telnet cleartext — SSH ile değiştirin.</div>
+    </div>
+    <div class="finding" style="border-color:#ea580c">
+      <span class="sev" style="background:#ea580c">High</span>
+      <span class="t">FTP servisi a&#231;ık (Port 21)</span>
+      <div class="h">📍 192.168.1.50</div>
+      <div class="d">FTP cleartext kimlik bilgisi taşır. SFTP / FTPS kullanın.</div>
+    </div>
+    <div class="finding" style="border-color:#ca8a04">
+      <span class="sev" style="background:#ca8a04">Medium</span>
+      <span class="t">TLS 1.0 h&#226;l&#226; etkin</span>
+      <div class="h">📍 SRV-FILE01</div>
+      <div class="d">TLS 1.0/1.1 modern saldırılara karşı zayıf. Devre dışı bırakın.</div>
+    </div>
+    <div class="finding" style="border-color:#ca8a04">
+      <span class="sev" style="background:#ca8a04">Medium</span>
+      <span class="t">TLS 1.1 h&#226;l&#226; etkin</span>
+      <div class="h">📍 SRV-FILE01</div>
+      <div class="d">TLS 1.0/1.1 modern saldırılara karşı zayıf. Devre dışı bırakın.</div>
+    </div>
+    <div class="finding" style="border-color:#64748b">
+      <span class="sev" style="background:#64748b">Info</span>
+      <span class="t">WDigest UseLogonCredential set edilmemiş</span>
+      <div class="h">📍 192.168.1.10</div>
+      <div class="d">A&#231;ık&#231;a 0 olarak set etmek tavsiye edilir.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>🌐 Discovered Devices and Open Ports</h2>
+    <table>
+      <thead><tr><th>IP</th><th>Open Ports</th><th>Services</th></tr></thead>
+      <tbody><tr><td>192.168.1.1</td><td>22, 80, 443</td><td>SSH, HTTP, HTTPS</td></tr>
+<tr><td>192.168.1.10</td><td>135, 139, 445, 3389, 5985, 5986, 6379</td><td>RPC/DCOM, NetBIOS-SSN, SMB, RDP, WinRM, WinRM-SSL, Redis</td></tr>
+<tr><td>192.168.1.22</td><td>22, 23, 80</td><td>SSH, Telnet, HTTP</td></tr>
+<tr><td>192.168.1.45</td><td>80, 443, 27017</td><td>HTTP, HTTPS, MongoDB</td></tr>
+<tr><td>192.168.1.50</td><td>21, 80, 443</td><td>FTP, HTTP, HTTPS</td></tr>
+<tr><td>DC01.musteri.local</td><td>53, 88, 135, 139, 389, 445, 464, 636, 3268, 3269</td><td>DNS, Kerberos, RPC/DCOM, NetBIOS-SSN, LDAP, SMB, Kerberos-PW, LDAPS, Global-Catalog, Global-Catalog-SSL</td></tr>
+<tr><td>SRV-FILE01</td><td>135, 139, 445, 5985</td><td>RPC/DCOM, NetBIOS-SSN, SMB, WinRM</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="cta">
+    <h2>🚀 This is only a surface scan</h2>
+    <p>Upgrade to AFN RiskScan <strong>Pro</strong> for deep audits across Active Directory, FortiGate, ESXi, Veeam, and Microsoft 365 with 32+ modules. AI-powered executive report, MITRE ATT&amp;CK mapping, industry benchmark, and PowerShell auto-fix scripts.</p>
+    <a class="btn" href="https://afnteknoloji.com/afnriskscan">Request Pro Demo →</a>
+    <a class="btn" style="background:transparent;border:1px solid #F5A623;color:#F5A623" href="https://afnteknoloji.com/iletisim">Contact</a>
+  </div>
+
+  <div class="footer">
+    AFN RiskScan Community Edition v1.1 &nbsp;|&nbsp;
+    <a href="https://afnteknoloji.com">AFN Teknoloji</a> &nbsp;|&nbsp;
+    <a href="https://github.com/Afn-Teknoloji/AfnRiskScan-CE">GitHub</a>
+  </div>
+</div>
+</body>
+</html>
