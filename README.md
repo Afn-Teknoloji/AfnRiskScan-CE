@@ -1,4 +1,4 @@
-﻿<div align="center">
+<div align="center">
 
 # 🛡️ AFN RiskScan — Community Edition
 
@@ -7,7 +7,7 @@
 [![Stars](https://img.shields.io/github/stars/Afn-Teknoloji/AfnRiskScan-CE?style=for-the-badge&color=F5A623)](https://github.com/Afn-Teknoloji/AfnRiskScan-CE/stargazers)
 [![Downloads](https://img.shields.io/github/downloads/Afn-Teknoloji/AfnRiskScan-CE/total?style=for-the-badge&color=00C853)](https://github.com/Afn-Teknoloji/AfnRiskScan-CE/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
-[![PowerShell](https://img.shields.io/badge/PowerShell-5.1+-5391FE?style=for-the-badge&logo=powershell&logoColor=white)](https://docs.microsoft.com/en-us/powershell/)
+[![PowerShell](https://img.shields.io/badge/PowerShell-7.0+-5391FE?style=for-the-badge&logo=powershell&logoColor=white)](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows)
 [![Made in Türkiye](https://img.shields.io/badge/Made_in-Türkiye-E30A17?style=for-the-badge)](https://afnteknoloji.com)
 
 **🇹🇷 Türkçe** &nbsp;•&nbsp; [**🇬🇧 English**](#-english)
@@ -40,13 +40,23 @@ Yöneticiye sunulabilir **HTML/CSV rapor** otomatik üretilir — hem de **tamam
 
 ### 🚀 Hızlı Başla
 
+> ⚠️ **Önemli:** Script paralel ağ taraması için **PowerShell 7+** (`pwsh`) gerektirir.
+> Windows PowerShell 5.1 (`powershell.exe`) ile **çalışmaz** — `#Requires` ile reddedilir.
+>
+> **En kolay yol:** Depoyu indirin → klasördeki **`Run-AfnRiskScan.cmd`** dosyasına çift tıklayın.
+> Bu launcher pwsh kurulu mu otomatik kontrol eder, kuruluysa script'i pwsh ile başlatır,
+> kurulu değilse net bir yükleme talimatı gösterir.
+>
+> Manuel kurulum: [resmi yükleme rehberi](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows) veya `winget install --id Microsoft.PowerShell`.
+
 #### Tek Satırla Çalıştır (Kurulum Yok)
 
 ```powershell
+# pwsh (PowerShell 7) içinde:
 irm https://raw.githubusercontent.com/Afn-Teknoloji/AfnRiskScan-CE/main/AfnRiskScan.ps1 | iex
 ```
 
-> ⚠️ Tek satır komut yerel ağınızı otomatik tespit edip tarar. Tarama süresi: **~2 dakika**.
+> Tek satır komut yerel ağınızı otomatik tespit edip tarar. Tarama süresi: **~2 dakika**.
 
 #### İngilizce Çıktı İçin
 
@@ -57,9 +67,14 @@ irm https://raw.githubusercontent.com/Afn-Teknoloji/AfnRiskScan-CE/main/AfnRiskS
 #### Veya İndirip Çalıştır
 
 ```powershell
+# 1) İndir
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Afn-Teknoloji/AfnRiskScan-CE/main/AfnRiskScan.ps1" -OutFile AfnRiskScan.ps1
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-.\AfnRiskScan.ps1
+
+# 2) İnternetten indirilen dosyayı serbest bırak (Mark-of-the-Web)
+Unblock-File .\AfnRiskScan.ps1
+
+# 3) Çalıştır (pwsh — PowerShell 7)
+pwsh -ExecutionPolicy Bypass -File .\AfnRiskScan.ps1
 ```
 
 ### ⚡ Özellikler
@@ -129,13 +144,23 @@ Auto-generates **executive HTML/CSV reports** — available in **Turkish and Eng
 
 ### 🚀 Quick Start
 
+> ⚠️ **Important:** Requires **PowerShell 7+** (`pwsh`) for parallel network scanning.
+> Does **not** work on Windows PowerShell 5.1 (`powershell.exe`) — rejected via `#Requires`.
+>
+> **Easiest path:** Download the repo → double-click **`Run-AfnRiskScan.cmd`**.
+> The launcher checks for `pwsh`, runs the script with it when present, and shows a
+> clear install hint otherwise.
+>
+> Manual install: [official guide](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows) or `winget install --id Microsoft.PowerShell`.
+
 #### Run with One Line (No Installation)
 
 ```powershell
+# Inside pwsh (PowerShell 7):
 irm https://raw.githubusercontent.com/Afn-Teknoloji/AfnRiskScan-CE/main/AfnRiskScan.ps1 | iex
 ```
 
-> ⚠️ Auto-detects your local network and scans it. Typical scan duration: **~2 minutes**.
+> Auto-detects your local network and scans it. Typical scan duration: **~2 minutes**.
 
 #### English Output
 
@@ -146,9 +171,14 @@ irm https://raw.githubusercontent.com/Afn-Teknoloji/AfnRiskScan-CE/main/AfnRiskS
 #### Or Download and Run
 
 ```powershell
+# 1) Download
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Afn-Teknoloji/AfnRiskScan-CE/main/AfnRiskScan.ps1" -OutFile AfnRiskScan.ps1
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-.\AfnRiskScan.ps1 -Lang en
+
+# 2) Unblock the downloaded file (Mark-of-the-Web)
+Unblock-File .\AfnRiskScan.ps1
+
+# 3) Run (pwsh — PowerShell 7)
+pwsh -ExecutionPolicy Bypass -File .\AfnRiskScan.ps1 -Lang en
 ```
 
 ### ⚡ Features
