@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     AFN RiskScan Community Edition — Türkçe Siber Risk Tarayıcı
     AFN RiskScan CE — Turkish Cyber Risk Scanner (Community Edition)
@@ -65,6 +65,10 @@
 
     UYARI: Bu aracı SADECE yetkili olduğunuz ağlarda kullanın.
            Yetkisiz tarama yasal sorumluluk doğurabilir.
+
+           Bu script PowerShell 7+ gerektirir (ForEach-Object -Parallel).
+           Windows PowerShell 5.1 ile çağrılırsa OTOMATIK olarak pwsh'a geçer.
+           Kurulum:  winget install --id Microsoft.PowerShell
 #>
 
 [CmdletBinding()]
@@ -78,6 +82,43 @@ param(
     [switch]$NoBanner,
     [ValidateSet('tr','en')] [string]$Lang = 'tr'
 )
+
+# ───────────────────────────────────────────────────────────────────
+#  PowerShell 7 OTOMATIK RELAUNCH
+#  Windows PowerShell 5.1 ile çağrılırsa, pwsh kurulu ise yeniden başlat.
+#  (ForEach-Object -Parallel sadece PS 7+ ile çalışır.)
+# ───────────────────────────────────────────────────────────────────
+if ($PSVersionTable.PSVersion.Major -lt 7) {
+    $pwshCmd = Get-Command pwsh -ErrorAction SilentlyContinue
+    if ($pwshCmd) {
+        Write-Host ""
+        Write-Host "  i  Windows PowerShell $($PSVersionTable.PSVersion.Major) algilandi - PowerShell 7 (pwsh) ile yeniden baslatiliyor..." -ForegroundColor Yellow
+        Write-Host ""
+        # PSBoundParameters'i pwsh komut satirina cevir
+        $argList = @('-NoProfile','-ExecutionPolicy','Bypass','-File', $PSCommandPath)
+        foreach ($k in $PSBoundParameters.Keys) {
+            $v = $PSBoundParameters[$k]
+            if ($v -is [switch]) {
+                if ($v.IsPresent) { $argList += "-$k" }
+            } else {
+                $argList += "-$k"
+                $argList += [string]$v
+            }
+        }
+        & $pwshCmd.Source @argList
+        exit $LASTEXITCODE
+    }
+    Write-Host ""
+    Write-Host "  X  Bu script PowerShell 7+ gerektirir." -ForegroundColor Red
+    Write-Host "     Su an Windows PowerShell $($PSVersionTable.PSVersion) kullaniyorsunuz." -ForegroundColor Red
+    Write-Host ""
+    Write-Host "     Kurulum (yonetici PowerShell):" -ForegroundColor Yellow
+    Write-Host "        winget install --id Microsoft.PowerShell" -ForegroundColor White
+    Write-Host ""
+    Write-Host "     Ya da: https://aka.ms/PSWindows" -ForegroundColor Yellow
+    Write-Host ""
+    exit 1
+}
 
 $ErrorActionPreference = 'SilentlyContinue'
 $script:Findings = New-Object System.Collections.Generic.List[object]
@@ -152,7 +193,7 @@ $script:I18N = @{
     }
 }
 $script:T = $I18N[$Lang]
-function L { param([string]$Key, [object[]]$Args) if ($Args) { return $script:T[$Key] -f $Args } else { return $script:T[$Key] } }
+function L { param([string]$Key, [object[]]$FormatArgs) if ($FormatArgs) { return $script:T[$Key] -f $FormatArgs } else { return $script:T[$Key] } }
 
 # ───────────────────────────────────────────────────────────────────
 #  BANNER
@@ -217,9 +258,9 @@ $PortProfiles['Top1000'] = @(
 #  HEDEF GENISLETME
 # ───────────────────────────────────────────────────────────────────
 function Expand-Targets {
-    param([string]$Input)
+    param([string]$TargetSpec)
 
-    if ([string]::IsNullOrWhiteSpace($Input)) {
+    if ([string]::IsNullOrWhiteSpace($TargetSpec)) {
         # Auto-detect local subnet
         $iface = Get-NetIPAddress -AddressFamily IPv4 -PrefixOrigin Dhcp,Manual -ErrorAction SilentlyContinue |
             Where-Object { $_.IPAddress -notlike '169.*' -and $_.IPAddress -ne '127.0.0.1' } |
@@ -235,29 +276,33 @@ function Expand-Targets {
     }
 
     # CIDR (e.g. 192.168.1.0/24)
-    if ($Input -match '^(\d+\.\d+\.\d+)\.\d+/(\d+)$') {
+    if ($TargetSpec -match '^(\d+\.\d+\.\d+)\.\d+/(\d+)$') {
         $base = $Matches[1]
         $mask = [int]$Matches[2]
         if ($mask -eq 24) { return (1..254) | ForEach-Object { "$base.$_" } }
         if ($mask -eq 23) {
-            $third = [int]($Input.Split('.')[2])
-            return @($third,($third+1)) | ForEach-Object {
-                $t = $_
-                (1..254) | ForEach-Object { "$($Input.Split('.')[0]).$($Input.Split('.')[1]).$t.$_" }
+            $parts = $TargetSpec.Split('.')
+            $third = [int]$parts[2]
+            $octet1 = $parts[0]
+            $octet2 = $parts[1]
+            $result = @()
+            foreach ($t in @($third, ($third + 1))) {
+                $result += (1..254) | ForEach-Object { "$octet1.$octet2.$t.$_" }
             }
+            return $result
         }
         Write-Host (L 'UnsupportedCIDR') -ForegroundColor Yellow
         return @()
     }
 
     # Range (192.168.1.1-50)
-    if ($Input -match '^(\d+\.\d+\.\d+)\.(\d+)-(\d+)$') {
+    if ($TargetSpec -match '^(\d+\.\d+\.\d+)\.(\d+)-(\d+)$') {
         $base = $Matches[1]; $s = [int]$Matches[2]; $e = [int]$Matches[3]
         return ($s..$e) | ForEach-Object { "$base.$_" }
     }
 
     # Single
-    return @($Input)
+    return @($TargetSpec)
 }
 
 # ───────────────────────────────────────────────────────────────────
@@ -283,12 +328,12 @@ function Invoke-PingSweep {
                 ($using:alive).Add($ip)
             }
         } catch {}
-    } -ErrorAction SilentlyContinue
+    }
 
-    $result = @($alive) | Sort-Object { [version]($_ -replace '\.','. ') -replace ' ','' } -ErrorAction SilentlyContinue
-    if (-not $result) { $result = @($alive) | Sort-Object }
+    $result = @($alive) | Sort-Object { ($_ -split '\.' | ForEach-Object { '{0:D3}' -f [int]$_ }) -join '.' }
+    if (-not $result) { $result = @() }
     Write-Host ((L 'Phase1Done') -f $result.Count) -ForegroundColor Green
-    return $result
+    return ,$result
 }
 
 # ───────────────────────────────────────────────────────────────────
@@ -311,7 +356,7 @@ function Invoke-PortScan {
             }
         } catch {}
         finally { $client.Close() }
-    } -ErrorAction SilentlyContinue
+    }
 
     return @($open) | Sort-Object
 }
@@ -369,7 +414,7 @@ function Test-HighRiskPort {
     }
     if ($highRisk.ContainsKey($Port)) {
         $info = $highRisk[$Port]
-        Add-Finding -Host $IP -Severity $info.Risk -Title "$($info.Name) servisi açık (Port $Port)" -Detail $info.Reason
+        Add-Finding -HostName $IP -Severity $info.Risk -Title "$($info.Name) servisi açık (Port $Port)" -Detail $info.Reason
     }
 }
 
@@ -416,7 +461,7 @@ function Invoke-LocalSecurityChecks {
     try {
         $smb = Get-SmbServerConfiguration -ErrorAction SilentlyContinue
         if ($smb -and $smb.EnableSMB1Protocol) {
-            Add-Finding -Host $local -Severity 'Kritik' -Title 'SMB1 protokolü aktif' -Detail 'SMB1 — EternalBlue/WannaCry/NotPetya saldırılarının vektörü. Devre dışı bırakın.'
+            Add-Finding -HostName $local -Severity 'Kritik' -Title 'SMB1 protokolü aktif' -Detail 'SMB1 — EternalBlue/WannaCry/NotPetya saldırılarının vektörü. Devre dışı bırakın.'
         }
     } catch {}
 
@@ -424,16 +469,16 @@ function Invoke-LocalSecurityChecks {
     $spooler = Get-Service -Name 'Spooler' -ErrorAction SilentlyContinue
     if ($spooler -and $spooler.Status -eq 'Running' -and (
         (Get-CimInstance Win32_ComputerSystem).DomainRole -ge 4)) {
-        Add-Finding -Host $local -Severity 'Kritik' -Title 'Print Spooler DC üzerinde aktif (PrintNightmare CVE-2021-34527)' -Detail 'Domain Controller üzerinde Print Spooler servisi açık — anlık domain takeover riski.'
+        Add-Finding -HostName $local -Severity 'Kritik' -Title 'Print Spooler DC üzerinde aktif (PrintNightmare CVE-2021-34527)' -Detail 'Domain Controller üzerinde Print Spooler servisi açık — anlık domain takeover riski.'
     }
 
     # 3. WDigest
     try {
         $wd = Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest' -Name 'UseLogonCredential' -ErrorAction SilentlyContinue
         if ($wd -and $wd.UseLogonCredential -eq 1) {
-            Add-Finding -Host $local -Severity 'Yüksek' -Title 'WDigest cleartext credential saklamayı aktif' -Detail 'Mimikatz LSASS dump ile cleartext parolalar çıkarılabilir.'
+            Add-Finding -HostName $local -Severity 'Yüksek' -Title 'WDigest cleartext credential saklamayı aktif' -Detail 'Mimikatz LSASS dump ile cleartext parolalar çıkarılabilir.'
         } elseif (-not $wd) {
-            Add-Finding -Host $local -Severity 'Bilgi' -Title 'WDigest UseLogonCredential set edilmemiş' -Detail 'Açıkça 0 olarak set etmek tavsiye edilir.'
+            Add-Finding -HostName $local -Severity 'Bilgi' -Title 'WDigest UseLogonCredential set edilmemiş' -Detail 'Açıkça 0 olarak set etmek tavsiye edilir.'
         }
     } catch {}
 
@@ -441,7 +486,7 @@ function Invoke-LocalSecurityChecks {
     try {
         $lm = Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Lsa' -Name 'NoLMHash' -ErrorAction SilentlyContinue
         if (-not $lm -or $lm.NoLMHash -ne 1) {
-            Add-Finding -Host $local -Severity 'Yüksek' -Title 'LM Hash storage devre dışı bırakılmamış' -Detail 'LM hash rainbow table ile saniyeler içinde crack edilir.'
+            Add-Finding -HostName $local -Severity 'Yüksek' -Title 'LM Hash storage devre dışı bırakılmamış' -Detail 'LM hash rainbow table ile saniyeler içinde crack edilir.'
         }
     } catch {}
 
@@ -449,7 +494,7 @@ function Invoke-LocalSecurityChecks {
     try {
         $guest = Get-LocalUser -Name 'Guest' -ErrorAction SilentlyContinue
         if ($guest -and $guest.Enabled) {
-            Add-Finding -Host $local -Severity 'Yüksek' -Title 'Yerel Guest hesabı aktif' -Detail 'Guest hesabı yetkisiz erişime kapı açar.'
+            Add-Finding -HostName $local -Severity 'Yüksek' -Title 'Yerel Guest hesabı aktif' -Detail 'Guest hesabı yetkisiz erişime kapı açar.'
         }
     } catch {}
 
@@ -459,24 +504,24 @@ function Invoke-LocalSecurityChecks {
         if (Test-Path $path) {
             $en = (Get-ItemProperty $path -Name 'Enabled' -ErrorAction SilentlyContinue).Enabled
             if ($null -eq $en -or $en -ne 0) {
-                Add-Finding -Host $local -Severity 'Orta' -Title "$v hâlâ etkin" -Detail 'TLS 1.0/1.1 modern saldırılara karşı zayıf. Devre dışı bırakın.'
+                Add-Finding -HostName $local -Severity 'Orta' -Title "$v hâlâ etkin" -Detail 'TLS 1.0/1.1 modern saldırılara karşı zayıf. Devre dışı bırakın.'
             }
         } else {
-            Add-Finding -Host $local -Severity 'Orta' -Title "$v explicit olarak kapatılmamış" -Detail "Schannel kayıt defteri girdisi yok — protokol kullanılıyor olabilir."
+            Add-Finding -HostName $local -Severity 'Orta' -Title "$v explicit olarak kapatılmamış" -Detail "Schannel kayıt defteri girdisi yok — protokol kullanılıyor olabilir."
         }
     }
 
     # 7. LLMNR
     $llmnr = (Get-ItemProperty 'HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient' -Name 'EnableMulticast' -ErrorAction SilentlyContinue).EnableMulticast
     if ($null -eq $llmnr -or $llmnr -ne 0) {
-        Add-Finding -Host $local -Severity 'Yüksek' -Title 'LLMNR aktif (Responder ile credential capture riski)' -Detail 'LLMNR kapatılmalı (GPO ile EnableMulticast=0).'
+        Add-Finding -HostName $local -Severity 'Yüksek' -Title 'LLMNR aktif (Responder ile credential capture riski)' -Detail 'LLMNR kapatılmalı (GPO ile EnableMulticast=0).'
     }
 
     # 8. RDP NLA
     try {
         $rdp = Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name 'UserAuthentication' -ErrorAction SilentlyContinue
         if ($rdp -and $rdp.UserAuthentication -ne 1) {
-            Add-Finding -Host $local -Severity 'Yüksek' -Title 'RDP NLA (Network Level Authentication) zorunlu değil' -Detail 'NLA olmadan RDP pre-auth saldırılarına açık (BlueKeep ve benzeri).'
+            Add-Finding -HostName $local -Severity 'Yüksek' -Title 'RDP NLA (Network Level Authentication) zorunlu değil' -Detail 'NLA olmadan RDP pre-auth saldırılarına açık (BlueKeep ve benzeri).'
         }
     } catch {}
 
@@ -488,13 +533,13 @@ function Invoke-LocalSecurityChecks {
 # ───────────────────────────────────────────────────────────────────
 function Add-Finding {
     param(
-        [string]$Host,
+        [string]$HostName,
         [ValidateSet('Kritik','Yüksek','Orta','Düşük','Bilgi')] [string]$Severity,
         [string]$Title,
         [string]$Detail
     )
     $script:Findings.Add([pscustomobject]@{
-        Host = $Host; Severity = $Severity; Title = $Title; Detail = $Detail
+        Host = $HostName; Severity = $Severity; Title = $Title; Detail = $Detail
         Time = Get-Date
     })
 }
@@ -683,7 +728,7 @@ if ($PortProfiles.ContainsKey($Ports)) {
 }
 
 # Hedef genişlet
-$targets = Expand-Targets -Input $Target
+$targets = Expand-Targets -TargetSpec $Target
 if ($targets.Count -eq 0) { exit 1 }
 
 Write-Host (L 'Config') -ForegroundColor White
