@@ -12,6 +12,10 @@
 
 **🇹🇷 Türkçe** &nbsp;•&nbsp; [**🇬🇧 English**](#-english)
 
+[🌐 AfnRiskScan CE Tanıtım Sayfası](https://risktarama.com.tr/afnriskscan-ce) &nbsp;•&nbsp;
+[📊 Örnek Siber Risk Raporu](https://risktarama.com.tr/ornek-rapor) &nbsp;•&nbsp;
+[🚀 Pro Demo Talep Et](https://risktarama.com.tr/#contact)
+
 </div>
 
 ---
