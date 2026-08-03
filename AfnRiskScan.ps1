@@ -123,6 +123,7 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 $ErrorActionPreference = 'SilentlyContinue'
 $script:Findings = New-Object System.Collections.Generic.List[object]
 $script:Hosts    = New-Object System.Collections.Generic.List[object]
+$script:LiveCount = 0
 $script:StartTime = Get-Date
 
 # ───────────────────────────────────────────────────────────────────
@@ -569,6 +570,7 @@ function Export-HtmlReport {
     $H_Duration    = if ($isEN) { 'Duration' }                              else { 'Süre' }
     $H_Target      = if ($isEN) { 'Targets' }                               else { 'Hedef' }
     $H_Devices     = if ($isEN) { 'devices' }                               else { 'cihaz' }
+    $H_ScanSummary = if ($isEN) { '{0} live hosts, {1} with open ports' }    else { '{0} canlı cihaz, {1} tanesinde açık port' }
     $H_Sec         = if ($isEN) { 'sec' }                                   else { 'sn' }
     $H_Findings    = if ($isEN) { '🔍 Findings' }                            else { '🔍 Bulgular' }
     $H_NoFindings  = if ($isEN) { 'No findings detected. Still, we recommend deep audit with the Pro edition (32+ modules).' } else { 'Bulgu tespit edilmedi. Yine de Pro sürüm ile 32+ modülde derin denetim öneririz.' }
@@ -632,7 +634,7 @@ td { font-family: 'Consolas', monospace; font-size: 13px; color: #d1d5db; }
 <div class="container">
   <div class="header">
     <h1>$H_Header</h1>
-    <p>${H_Date}: $(Get-Date -Format 'dd MMMM yyyy HH:mm') &nbsp;|&nbsp; ${H_Duration}: $duration $H_Sec &nbsp;|&nbsp; ${H_Target}: $($script:Hosts.Count) $H_Devices</p>
+    <p>${H_Date}: $(Get-Date -Format 'dd MMMM yyyy HH:mm') &nbsp;|&nbsp; ${H_Duration}: $duration $H_Sec &nbsp;|&nbsp; $($H_ScanSummary -f $script:LiveCount, $script:Hosts.Count)</p>
   </div>
 
   <div class="stats">
@@ -742,6 +744,7 @@ Write-Host (L 'ConfLang') -ForegroundColor DarkGray
 
 # Aşama 1: Ping sweep
 $alive = Invoke-PingSweep -IPs $targets
+$script:LiveCount = $alive.Count
 
 # Aşama 2: Port tarama
 if ($alive.Count -gt 0) {
