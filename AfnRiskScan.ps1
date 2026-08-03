@@ -210,7 +210,7 @@ function Show-Banner {
     ║     ██╔══██║██╔══╝  ██║╚██╗██║   ██╔══██╗██║╚════██║██╔═██╗   ║
     ║     ██║  ██║██║     ██║ ╚████║   ██║  ██║██║███████║██║  ██╗  ║
     ║                                                               ║
-    ║              R I S K   S C A N   —   C E   v 1.0              ║
+    ║             R I S K   S C A N   —   C E   v 1.1.1             ║
     ║                                                               ║
     ║          🛡️  Türkçe Siber Risk Tarayıcı  🛡️                   ║
     ║              afnteknoloji.com/afnriskscan                     ║
@@ -395,14 +395,14 @@ function Test-HighRiskPort {
     $highRisk = @{
         21   = @{ Name='FTP'; Risk='Yüksek'; Reason='FTP cleartext kimlik bilgisi taşır. SFTP / FTPS kullanın.' }
         23   = @{ Name='Telnet'; Risk='Kritik'; Reason='Telnet cleartext — SSH ile değiştirin.' }
-        445  = @{ Name='SMB'; Risk='Orta'; Reason='SMB internete açıksa kritik. SMB1 kontrolü yapılmalı.' }
-        1433 = @{ Name='MSSQL'; Risk='Yüksek'; Reason='MSSQL internete açık. Brute force / SQL injection riski.' }
+        445  = @{ Name='SMB'; Risk='Orta'; Reason='SMB ağ üzerinden erişilebilir. SMB1 kapalı mı, paylaşım izinleri doğru mu kontrol edin; dış yüzeye kesinlikle açık olmamalı.' }
+        1433 = @{ Name='MSSQL'; Risk='Yüksek'; Reason='MSSQL ağ üzerinden erişilebilir. Zayıf sa parolası ve brute force riski; erişimi yalnızca uygulama sunucularıyla sınırlayın.' }
         1434 = @{ Name='MSSQL-UDP'; Risk='Orta'; Reason='SQL Slammer geçmişi var. Firewall arkasında olmalı.' }
-        2049 = @{ Name='NFS'; Risk='Yüksek'; Reason='NFS açık paylaşım — yetkisiz veri erişimi riski.' }
+        2049 = @{ Name='NFS'; Risk='Yüksek'; Reason='NFS paylaşımı ağ üzerinden erişilebilir — yetkisiz veri erişimi riski.' }
         2375 = @{ Name='Docker-API'; Risk='Kritik'; Reason='Docker API auth olmadan açık — full container takeover.' }
-        3306 = @{ Name='MySQL'; Risk='Yüksek'; Reason='MySQL internete açık. Auth kontrolü zorunlu.' }
+        3306 = @{ Name='MySQL'; Risk='Yüksek'; Reason='MySQL ağ üzerinden erişilebilir. Kimlik doğrulama ve erişim kısıtı zorunlu.' }
         3389 = @{ Name='RDP'; Risk='Yüksek'; Reason='RDP brute force / BlueKeep CVE-2019-0708 riski. NLA zorunlu.' }
-        5432 = @{ Name='PostgreSQL'; Risk='Yüksek'; Reason='PostgreSQL açık. Auth + SSL gerekli.' }
+        5432 = @{ Name='PostgreSQL'; Risk='Yüksek'; Reason='PostgreSQL ağ üzerinden erişilebilir. Kimlik doğrulama ve SSL gerekli.' }
         5900 = @{ Name='VNC'; Risk='Yüksek'; Reason='VNC çoğunlukla parolasız. Tunnel arkasına alın.' }
         6379 = @{ Name='Redis'; Risk='Kritik'; Reason='Redis varsayılan auth yok — RCE riski yüksek.' }
         7001 = @{ Name='WebLogic'; Risk='Kritik'; Reason='WebLogic deserialization CVE geçmişi var.' }
@@ -694,7 +694,7 @@ td { font-family: 'Consolas', monospace; font-size: 13px; color: #d1d5db; }
   </div>
 
   <div class="footer">
-    AFN RiskScan Community Edition v1.0 &nbsp;|&nbsp; Geliştirici:
+    AFN RiskScan Community Edition v1.1.1 &nbsp;|&nbsp; Geliştirici:
     <a href="https://afnteknoloji.com">AFN Teknoloji Bilişim Destek ve Danışmanlık</a><br>
     MIT Lisansı &nbsp;|&nbsp; <a href="https://github.com/Afn-Teknoloji/AfnRiskScan-CE">GitHub</a>
   </div>
