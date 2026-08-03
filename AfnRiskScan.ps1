@@ -153,7 +153,7 @@ $script:I18N = @{
         SumCritical    = "     🔴 Kritik   : {0}"
         SumHigh        = "     🟠 Yüksek   : {0}"
         SumMedium      = "     🟡 Orta     : {0}"
-        SumDevices     = "     🌐 Cihaz    : {0}"
+        SumDevices     = "     🌐 Cihaz    : {0} canlı, {1} tanesinde açık port"
         ReportHtml     = "  📄 HTML rapor : {0}"
         ReportCsv      = "  📄 CSV rapor  : {0}"
         ProTeaser1     = "  💡  Daha derin denetim ister misiniz?"
@@ -184,7 +184,7 @@ $script:I18N = @{
         SumCritical    = "     🔴 Critical : {0}"
         SumHigh        = "     🟠 High     : {0}"
         SumMedium      = "     🟡 Medium   : {0}"
-        SumDevices     = "     🌐 Devices  : {0}"
+        SumDevices     = "     🌐 Devices  : {0} live, {1} with open ports"
         ReportHtml     = "  📄 HTML report : {0}"
         ReportCsv      = "  📄 CSV report  : {0}"
         ProTeaser1     = "  💡  Want a deeper audit?"
@@ -792,7 +792,7 @@ $orta   = ($script:Findings | Where-Object Severity -eq 'Orta').Count
 Write-Host ((L 'SumCritical') -f $kritik) -ForegroundColor Red
 Write-Host ((L 'SumHigh')     -f $yuksek) -ForegroundColor DarkYellow
 Write-Host ((L 'SumMedium')   -f $orta)   -ForegroundColor Yellow
-Write-Host ((L 'SumDevices')  -f $script:Hosts.Count) -ForegroundColor Cyan
+Write-Host ((L 'SumDevices')  -f $script:LiveCount, $script:Hosts.Count) -ForegroundColor Cyan
 Write-Host ""
 Write-Host ((L 'ReportHtml') -f $htmlPath) -ForegroundColor White
 Write-Host ((L 'ReportCsv')  -f $csvPath)  -ForegroundColor White
