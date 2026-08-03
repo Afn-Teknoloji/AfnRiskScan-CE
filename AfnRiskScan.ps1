@@ -576,10 +576,12 @@ function Export-HtmlReport {
     $H_IP          = if ($isEN) { 'IP' }                                    else { 'IP' }
     $H_OpenPorts   = if ($isEN) { 'Open Ports' }                            else { 'Açık Portlar' }
     $H_Services    = if ($isEN) { 'Services' }                              else { 'Servisler' }
-    $H_CTATitle    = if ($isEN) { '🚀 This is only a surface scan' }         else { '🚀 Bu sadece yüzeysel tarama' }
-    $H_CTABody     = if ($isEN) { 'Upgrade to AFN RiskScan <strong>Pro</strong> for deep audits across Active Directory, FortiGate, ESXi, Veeam, and Microsoft 365 with 32+ modules. AI-powered executive report, MITRE ATT&amp;CK mapping, industry benchmark, and PowerShell auto-fix scripts.' } else { 'AFN RiskScan <strong>Pro</strong> sürüm ile Active Directory, FortiGate, ESXi, Veeam, Microsoft 365 ortamlarınızda 32+ modülde derin denetim yapın. AI destekli Türkçe yönetici raporu, MITRE ATT&amp;CK eşlemesi, sektör benchmark ve PowerShell auto-fix scripti ile.' }
-    $H_CTAPrimary  = if ($isEN) { 'Request Pro Demo →' }                    else { 'Pro Demo Talep Et →' }
-    $H_CTAContact  = if ($isEN) { 'Contact' }                               else { 'İletişim' }
+    $H_CTATitle    = if ($isEN) { '📋 Want a second opinion on these findings?' } else { '📋 Bulgularınıza ikinci bir göz ister misiniz?' }
+    $H_CTABody     = if ($isEN) { 'Send us this report and one of our engineers will return a one-page priority list &mdash; which finding to fix first, and what it takes. Free, no strings attached. Your report is reviewed by a human and is not shared with third parties.' } else { 'Bu raporu bize gönderin; mühendislerimiz 1 sayfalık öncelik listesi hazırlayıp geri dönsün &mdash; hangi bulgu önce kapatılmalı, ne gerektiriyor. Ücretsiz ve karşılıksız. Raporunuz bir uzman tarafından incelenir, üçüncü taraflarla paylaşılmaz.' }
+    $H_CTAPrimary  = if ($isEN) { 'Get a free expert review →' }               else { 'Ücretsiz uzman yorumu al →' }
+    $H_CTASecondary= if ($isEN) { 'AFN RiskScan Pro' }                        else { 'AFN RiskScan Pro' }
+    $H_CTAContact  = if ($isEN) { 'Contact' }                                 else { 'İletişim' }
+    $H_CTANote     = if ($isEN) { 'This scan is a surface map. Deep audit across Active Directory, FortiGate, ESXi, Veeam and Microsoft 365 is available in the Pro edition.' } else { 'Bu tarama yüzeysel bir risk haritasıdır. Active Directory, FortiGate, ESXi, Veeam ve Microsoft 365 ortamlarında derin denetim Pro sürümde yapılır.' }
     $H_Severity_K  = if ($isEN) { 'Critical' } else { 'Kritik' }
     $H_Severity_Y  = if ($isEN) { 'High' }     else { 'Yüksek' }
     $H_Severity_O  = if ($isEN) { 'Medium' }   else { 'Orta' }
@@ -686,8 +688,9 @@ td { font-family: 'Consolas', monospace; font-size: 13px; color: #d1d5db; }
   <div class="cta">
     <h2>$H_CTATitle</h2>
     <p>$H_CTABody</p>
-    <a class="btn" href="https://afnteknoloji.com/afnriskscan">$H_CTAPrimary</a>
-    <a class="btn" style="background:transparent;border:1px solid #F5A623;color:#F5A623" href="https://afnteknoloji.com/iletisim">$H_CTAContact</a>
+    <a class="btn" href="https://risktarama.com.tr/rapor-yorum?utm_source=ce-report&amp;utm_medium=cta&amp;utm_campaign=free-review">$H_CTAPrimary</a>
+    <a class="btn" style="background:transparent;border:1px solid #F5A623;color:#F5A623" href="https://risktarama.com.tr/?utm_source=ce-report&amp;utm_medium=cta&amp;utm_campaign=pro">$H_CTASecondary</a>
+    <p style="margin-top:16px;font-size:13px;color:#9ca3af">$H_CTANote</p>
   </div>
 
   <div class="footer">

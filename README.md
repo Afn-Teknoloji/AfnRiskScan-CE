@@ -53,7 +53,38 @@ Yöneticiye sunulabilir **HTML/CSV rapor** otomatik üretilir — hem de **tamam
 >
 > Manuel kurulum: [resmi yükleme rehberi](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows) veya `winget install --id Microsoft.PowerShell`.
 
-#### Tek Satırla Çalıştır (Kurulum Yok)
+#### 🔐 Güvenli Kurulum (önerilen)
+
+Bu bir ağ tarama aracıdır. İnternetten indirdiğiniz hiçbir tarayıcıyı — bizimki dahil —
+okumadan çalıştırmayın. Aşağıdaki akış tam olarak bunun için var.
+
+```powershell
+# 1) İndir
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Afn-Teknoloji/AfnRiskScan-CE/main/AfnRiskScan.ps1" -OutFile AfnRiskScan.ps1
+
+# 2) Özeti doğrula — Releases sayfasında yayınlanan SHA256 ile karşılaştır
+Get-FileHash .\AfnRiskScan.ps1 -Algorithm SHA256
+
+# 3) Kodu okuyun (tek dosya, ~800 satır)
+notepad .\AfnRiskScan.ps1
+
+# 4) Mark-of-the-Web işaretini kaldır
+Unblock-File .\AfnRiskScan.ps1
+
+# 5) Çalıştır (pwsh — PowerShell 7)
+pwsh -ExecutionPolicy Bypass -File .\AfnRiskScan.ps1
+```
+
+Her sürümün SHA256 özeti [Releases](https://github.com/Afn-Teknoloji/AfnRiskScan-CE/releases) sayfasında yayınlanır.
+
+#### 🔒 Veri Gizliliği
+
+- Script **hiçbir veri göndermez.** Telemetri, analitik veya uzak sunucu çağrısı yoktur.
+- Tarama sonuçları ve raporlar **yalnızca çalıştırdığınız makinede** oluşur.
+- Ağ dışına çıkan tek trafik, taramak için sizin belirlediğiniz hedeflere gönderilen paketlerdir.
+- Kod tek dosyadır; bunu kendiniz satır satır doğrulayabilirsiniz.
+
+#### Kurulum İstemiyorsanız — Tek Satır
 
 ```powershell
 # pwsh (PowerShell 7) içinde:
@@ -157,7 +188,38 @@ Auto-generates **executive HTML/CSV reports** — available in **Turkish and Eng
 >
 > Manual install: [official guide](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows) or `winget install --id Microsoft.PowerShell`.
 
-#### Run with One Line (No Installation)
+#### 🔐 Secure Installation (recommended)
+
+This is a network scanner. Never run a scanner you downloaded from the internet — including
+ours — without reading it first. That is exactly what this flow is for.
+
+```powershell
+# 1) Download
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Afn-Teknoloji/AfnRiskScan-CE/main/AfnRiskScan.ps1" -OutFile AfnRiskScan.ps1
+
+# 2) Verify the hash against the SHA256 published on the Releases page
+Get-FileHash .\AfnRiskScan.ps1 -Algorithm SHA256
+
+# 3) Read the code (single file, ~800 lines)
+notepad .\AfnRiskScan.ps1
+
+# 4) Clear the Mark-of-the-Web flag
+Unblock-File .\AfnRiskScan.ps1
+
+# 5) Run it (pwsh — PowerShell 7)
+pwsh -ExecutionPolicy Bypass -File .\AfnRiskScan.ps1
+```
+
+SHA256 hashes for every release are published on the [Releases](https://github.com/Afn-Teknoloji/AfnRiskScan-CE/releases) page.
+
+#### 🔒 Data Privacy
+
+- The script **sends no data.** No telemetry, no analytics, no remote calls.
+- Scan results and reports are generated **only on the machine you run it from.**
+- The only traffic leaving your machine goes to the targets you explicitly choose to scan.
+- It is a single file — verify this yourself, line by line.
+
+#### If You Prefer No Installation — One Line
 
 ```powershell
 # Inside pwsh (PowerShell 7):
